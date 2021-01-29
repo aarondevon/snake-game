@@ -1,7 +1,9 @@
 let canvas;
 let snakeX = 0;
 let snakeY = 0;
-let direction = 20;
+let direction = 0;
+const movement = 20;
+let firstKey = true;
 
 const colorRectangle = (leftX, topY, width, height, color) => {
   canvasContext.fillStyle = color;
@@ -14,7 +16,26 @@ const draw = () => {
 }
 
 const move = () => {
+  if ( firstKey) {
+    snakeX += movement;
+  } else {
+    switch (direction) {
+      case 37:
+        snakeX -= movement;
+        break;
+      case 39:
+        snakeX += movement;
+        break;
 
+      case 38:
+        snakeY -= 20;
+        break;
+      case 40:
+        snakeY += 20;
+        break;
+    }
+  }
+  
 }
 
 
@@ -22,26 +43,14 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
       canvasContext = canvas.getContext('2d');
 
-      let framesPerSecond = 30;
+      let framesPerSecond = 5;
       setInterval(() => {
       move();
       draw();
       }, 1000 / framesPerSecond);
       document.addEventListener("keydown", function(event) {
-        switch (event.which) {
-          case 37:
-            snakeX -= 20;
-            break;
-          case 39:
-            snakeX += 20;
-            break;
-          case 38:
-            snakeY -= 20;
-            break;
-          case 40:
-            snakeY += 20;
-            break;
-        }
+        direction = event.which;
+        firstKey = false;
         console.log(event.which);
       });
     };
