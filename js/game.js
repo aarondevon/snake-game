@@ -21,6 +21,14 @@ const colorRectangle = (leftX, topY, width, height, color) => {
   canvasContext.fillRect(leftX, topY, width, height);
 }
 
+const colorCircle = (centerX, centerY, radius, drawColor) => {
+  canvasContext.fillStyle = drawColor;
+  canvasContext.beginPath();
+  // X (Center of circle), Y, Radius, Angle, Radian, top or bottom of circle
+  canvasContext.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+  canvasContext.fill();
+}
+
 let cols = 24 
 let rows = 21
 let squareSize = 20
@@ -50,7 +58,8 @@ const draw = () => {
 
 
   // Apple
-  colorRectangle(appleLocation.x, appleLocation.y, squareSize, squareSize, 'red')
+  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (squareSize / 2), 'red');
+  // colorRectangle(appleLocation.x, appleLocation.y, squareSize, squareSize, 'red')
   
 
   // Snake
@@ -112,7 +121,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
       canvasContext = canvas.getContext('2d');
 
-      let framesPerSecond = 5;
+      let framesPerSecond = 1;
       setInterval(() => {
       move();
       draw();
