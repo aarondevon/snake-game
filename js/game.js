@@ -3,7 +3,7 @@ let snakeX = 0;
 let snakeY = 0;
 let direction = 0;
 let snakeLength = 20;
-const movement = 20;
+const movement = 5;
 let firstKey = true;
 const snakeHead = {
   x: snakeX,
@@ -23,10 +23,11 @@ const colorRectangle = (leftX, topY, width, height, color) => {
 
 const draw = () => {
   colorRectangle(0,0, canvas.width, canvas.height, 'green')
+  colorRectangle(0,0, canvas.width, canvas.height, '#A7D948')
 
 
   // Apple
-  colorRectangle(appleLocation.x, appleLocation.y, 20, 20, 'red')
+  colorRectangle(appleLocation.x, appleLocation.y, 15, 15, 'red')
   
 
   // Snake
@@ -38,7 +39,7 @@ const draw = () => {
       //   snake[index] = snake[index - 1];
       //   colorRectangle(section.x, section.y, 20, 20, 'black')
       // }
-      colorRectangle(section.x, section.y, 20, 20, 'black')
+      colorRectangle(section.x, section.y, 15, 15, 'black')
       console.log('in foreach');
     
     
@@ -65,10 +66,10 @@ const move = () => {
         break;
 
       case 38:
-        snakeHead.y -= 20;
+        snakeHead.y -= movement;
         break;
       case 40:
-        snakeHead.y += 20;
+        snakeHead.y += movement;
         break;
     }
   }
@@ -88,7 +89,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
       canvasContext = canvas.getContext('2d');
 
-      let framesPerSecond = 1;
+      let framesPerSecond = 20;
       setInterval(() => {
       move();
       draw();
