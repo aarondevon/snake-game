@@ -4,7 +4,7 @@ let snakeY = 0;
 let direction = 0;
 let snakeLength = 20;
 const movement = 1;
-let firstKey = true;
+let startGame = false;
 const snakeHead = {
   x: snakeX,
   y: snakeY
@@ -44,13 +44,10 @@ const colorBoard = (squareSize, rows, cols) => {
         for (let i = 0; i < cols; i++) {
             if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) 
               colorRectangle(i * squareSize,j * squareSize, squareSize, squareSize, lightGreen)
-                // ctx.fillStyle = whiteSquareColor
             else {
               colorRectangle(i * squareSize,j * squareSize, squareSize, squareSize, mediumGreen)
-              // ctx.fillStyle = blackSquareColor
             }
-            
-            // ctx.fillRect(i * squareSize, j * squareSize, squareSize, squareSize)
+
         }
 }
 
@@ -59,27 +56,13 @@ const draw = () => {
   colorRectangle(0,0, canvas.width, canvas.height, 'green')
   colorBoard(squareSize, rows, cols) 
 
-
   // Apple
   colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (squareSize / 2), 'red');
-  // colorRectangle(appleLocation.x, appleLocation.y, squareSize, squareSize, 'red')
   
   // Snake
     snake.forEach((section, index) => {
-      // if (index === 0) {
-      //   colorRectangle(section.x, section.y, 20, 20, 'black')
-      //   console.log(section.x )
-      // } else {
-      //   snake[index] = snake[index - 1];
-      //   colorRectangle(section.x, section.y, 20, 20, 'black')
-      // }
       colorRectangle(section.x, section.y, squareSize, squareSize, 'black')
-      console.log('in foreach');
-    
-    
   });
-  // colorRectangle(snakeX, snakeY, 20, 20, 'black')
-
 }
 
 let currentDirection;
@@ -105,8 +88,8 @@ const move = () => {
     return {x: position.x, y: position.y}
   });
 
-  if (firstKey) {
-    currentDirection = snakeMove.right;
+  if (startGame) {
+    currentDirection = snakeMove.right; 
     currentDirection();
   }
 
@@ -145,23 +128,26 @@ const move = () => {
   
 }
 
-
 window.onload = function () {
   canvas = document.querySelector('#canvas');
       canvasContext = canvas.getContext('2d');
 
-      let framesPerSecond = 60;
+      let framesPerSecond = 100;
+
       setInterval(() => {
-      move();
+      if (direction) {
+        move();
+      }
+        
       draw();
       }, 1000 / framesPerSecond);
+
       document.addEventListener("keydown", function(event) {
         if ( allowedKeys.includes(event.which))
         {
           direction = event.which;
-          firstKey = false;
+
           console.log(event.which);
         }
-        
       });
     };
