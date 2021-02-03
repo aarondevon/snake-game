@@ -3,7 +3,7 @@ let snakeX = 0;
 let snakeY = 0;
 let direction = 0;
 let snakeLength = 20;
-const movement = 20;
+const movement = 1;
 let firstKey = true;
 const snakeHead = {
   x: snakeX,
@@ -14,6 +14,9 @@ let appleLocation = {
   x: 100,
   y: 120
 }
+
+const allowedKeys = [37, 38, 39, 40]
+
 const snake = [snakeHead];
 
 const colorRectangle = (leftX, topY, width, height, color) => {
@@ -80,6 +83,23 @@ const draw = () => {
 
 }
 
+let currentDirection;
+
+const moveMethods = {
+  left() {
+    snakeHead.x-= movement;
+  },
+  right() {
+    snakeHead.x += movement;
+  },
+  up() {
+    snakeHead.y -= movement;
+  },
+  down() {
+    snakeHead.y += movement;
+  }
+}
+
 const move = () => {
   // array of last positions
   let lastPosition = snake.map((position) => {
@@ -87,24 +107,59 @@ const move = () => {
   });
 
   if (firstKey) {
-    snakeHead.x += movement;
-  } else {
+    currentDirection = moveMethods.right;
+    // snakeHead.x += movement;
+    currentDirection();
+  }
+
+  if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
     switch (direction) {
       case 37:
-        snakeHead.x-= movement;
+        currentDirection = moveMethods.left;
+        // snakeHead.x-= movement;
+        currentDirection();
         break;
       case 39:
-        snakeHead.x += movement;
+        currentDirection = moveMethods.right;
+        // snakeHead.x += movement;
+        currentDirection();
         break;
 
       case 38:
-        snakeHead.y -= movement;
+        currentDirection = moveMethods.up;
+        // snakeHead.y -= movement;
+        currentDirection();
         break;
       case 40:
-        snakeHead.y += movement;
+        currentDirection = moveMethods.down;
+        // snakeHead.y += movement;
+        currentDirection();
         break;
     }
+    console.log(direction);
+  } else {
+    currentDirection();
   }
+  
+  // if (firstKey) {
+  //   snakeHead.x += movement;
+  // } else {
+  //   switch (direction) {
+  //     case 37:
+  //       snakeHead.x-= movement;
+  //       break;
+  //     case 39:
+  //       snakeHead.x += movement;
+  //       break;
+
+  //     case 38:
+  //       snakeHead.y -= movement;
+  //       break;
+  //     case 40:
+  //       snakeHead.y += movement;
+  //       break;
+  //   }
+  // }
 
   for (let i = snake.length - 1; i > 0; i--) {
     snake[i] = lastPosition[i-1];
@@ -121,14 +176,18 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
       canvasContext = canvas.getContext('2d');
 
-      let framesPerSecond = 1;
+      let framesPerSecond = 60;
       setInterval(() => {
       move();
       draw();
       }, 1000 / framesPerSecond);
       document.addEventListener("keydown", function(event) {
-        direction = event.which;
-        firstKey = false;
-        console.log(event.which);
+        if ( allowedKeys.includes(event.which))
+        {
+          direction = event.which;
+          firstKey = false;
+          console.log(event.which);
+        }
+        
       });
     };
