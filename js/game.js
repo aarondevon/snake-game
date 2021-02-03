@@ -64,7 +64,6 @@ const draw = () => {
   colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (squareSize / 2), 'red');
   // colorRectangle(appleLocation.x, appleLocation.y, squareSize, squareSize, 'red')
   
-
   // Snake
     snake.forEach((section, index) => {
       // if (index === 0) {
@@ -85,7 +84,7 @@ const draw = () => {
 
 let currentDirection;
 
-const moveMethods = {
+const snakeMove = {
   left() {
     snakeHead.x-= movement;
   },
@@ -107,32 +106,27 @@ const move = () => {
   });
 
   if (firstKey) {
-    currentDirection = moveMethods.right;
-    // snakeHead.x += movement;
+    currentDirection = snakeMove.right;
     currentDirection();
   }
 
   if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
     switch (direction) {
       case 37:
-        currentDirection = moveMethods.left;
-        // snakeHead.x-= movement;
+        currentDirection = snakeMove.left;
         currentDirection();
         break;
       case 39:
-        currentDirection = moveMethods.right;
-        // snakeHead.x += movement;
+        currentDirection = snakeMove.right;
         currentDirection();
         break;
 
       case 38:
-        currentDirection = moveMethods.up;
-        // snakeHead.y -= movement;
+        currentDirection = snakeMove.up;
         currentDirection();
         break;
       case 40:
-        currentDirection = moveMethods.down;
-        // snakeHead.y += movement;
+        currentDirection = snakeMove.down;
         currentDirection();
         break;
     }
@@ -140,26 +134,6 @@ const move = () => {
   } else {
     currentDirection();
   }
-  
-  // if (firstKey) {
-  //   snakeHead.x += movement;
-  // } else {
-  //   switch (direction) {
-  //     case 37:
-  //       snakeHead.x-= movement;
-  //       break;
-  //     case 39:
-  //       snakeHead.x += movement;
-  //       break;
-
-  //     case 38:
-  //       snakeHead.y -= movement;
-  //       break;
-  //     case 40:
-  //       snakeHead.y += movement;
-  //       break;
-  //   }
-  // }
 
   for (let i = snake.length - 1; i > 0; i--) {
     snake[i] = lastPosition[i-1];
