@@ -113,7 +113,6 @@ const move = () => {
         currentDirection();
         break;
     }
-    console.log(direction);
   } else {
     currentDirection();
   }
@@ -145,9 +144,22 @@ window.onload = function () {
       document.addEventListener("keydown", function(event) {
         if ( allowedKeys.includes(event.which))
         {
-          direction = event.which;
+          let key;
 
-          console.log(event.which);
+          if (!direction) {
+            direction = event.which;
+          } else {
+            key = event.which;
+          }
+
+
+          if (direction === 37 && key === 39 || direction === 39 && key === 37) {
+            return;
+          } else if (direction === 38 && key === 40 || direction === 40 && key === 38) {
+            return;
+          } else {
+            direction = event.which;
+          }
         }
       });
     };
