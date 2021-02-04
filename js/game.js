@@ -3,8 +3,9 @@ let snakeX = 0;
 let snakeY = 0;
 let direction = 0;
 let snakeLength = 20;
-const movement = 1;
+const movement = 5;
 let startGame = false;
+
 const snakeHead = {
   x: snakeX,
   y: snakeY
@@ -69,7 +70,7 @@ let currentDirection;
 
 const snakeMove = {
   left() {
-    snakeHead.x-= movement;
+    snakeHead.x -= movement;
   },
   right() {
     snakeHead.x += movement;
@@ -131,7 +132,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
       canvasContext = canvas.getContext('2d');
 
-      let framesPerSecond = 100;
+      let framesPerSecond = 10;
 
       setInterval(() => {
       if (direction) {
