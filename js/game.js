@@ -95,10 +95,10 @@ const move = () => {
     currentDirection();
   }
 
-  if ( snakeHead.x < 60 || snakeHead.x > canvas.width - 60) {
-    collision = true;
-    console.log('side hit');
-  }
+  // if ( snakeHead.x < 0 || snakeHead.x > canvas.width - 60) {
+  //   collision = true;
+  //   console.log('side hit');
+  // }
 
 
   if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
@@ -132,6 +132,10 @@ const move = () => {
   if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
     snake.push({x:snake[snake.length - 1].x, y:snake[snake.length -1].y});
   }
+  if ( snakeHead.x < 0 || snakeHead.x >= canvas.width - 20) {
+    collision = true;
+    console.log('side hit');
+  }
   
 }
 
@@ -142,7 +146,7 @@ window.onload = function () {
       let framesPerSecond = 5.5;
 
       if (DEBUG) {
-        direction = 0;
+        direction = 39;
         snakeHead.x = 20; 
         snakeHead.y = 200;
         snake[1] = {x: 40, y: 200};
