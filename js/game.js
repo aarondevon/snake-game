@@ -1,9 +1,9 @@
 let canvas;
-let snakeX = 0;
+let snakeX = 40;
 let snakeY = 0;
 let direction = 0;
 let snakeLength = 20;
-const movement = 5;
+const movement = 20;
 let startGame = false;
 
 const snakeHead = {
@@ -18,7 +18,7 @@ let appleLocation = {
 
 const allowedKeys = [37, 38, 39, 40]
 
-const snake = [snakeHead];
+const snake = [snakeHead, {x:20,y:0}, {x:0,y:0}];
 
 const colorRectangle = (leftX, topY, width, height, color) => {
   canvasContext.fillStyle = color;
@@ -132,7 +132,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
       canvasContext = canvas.getContext('2d');
 
-      let framesPerSecond = 10;
+      let framesPerSecond = 5.5;
 
       setInterval(() => {
       if (direction) {
