@@ -95,12 +95,6 @@ const move = () => {
     currentDirection();
   }
 
-  // if ( snakeHead.x < 0 || snakeHead.x > canvas.width - 60) {
-  //   collision = true;
-  //   console.log('side hit');
-  // }
-
-
   if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
     switch (direction) {
       case 37:
@@ -132,9 +126,13 @@ const move = () => {
   if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
     snake.push({x:snake[snake.length - 1].x, y:snake[snake.length -1].y});
   }
-  if ( snakeHead.x < 0 || snakeHead.x >= canvas.width - 20) {
+
+  // Check to see if snake hit the sides of the board
+  if ( snakeHead.x < 0 || snakeHead.x > canvas.width - 20 || snakeHead.y < 0 || snakeHead.y > canvas.height - 20) {
     collision = true;
-    console.log('side hit');
+    for (let i = 0; i < snake.length; i++) {
+      snake[i] = lastPosition[i];
+    }
   }
   
 }
