@@ -134,6 +134,15 @@ const move = () => {
       snake[i] = lastPosition[i];
     }
   }
+
+  // Check to see if snake hits itself
+
+ for (let i = 1; i < snake.length; i++) {
+    if (JSON.stringify(snake[i]) === JSON.stringify(snakeHead)) {
+      collision = true;
+      console.log('Snake on snake collision');
+    }
+  };
   
 }
 
@@ -144,13 +153,13 @@ window.onload = function () {
       let framesPerSecond = 5.5;
 
       if (DEBUG) {
-        direction = 39;
+        direction = 0;
         snakeHead.x = 20; 
         snakeHead.y = 200;
         snake[1] = {x: 40, y: 200};
         snake[2] = {x: 60, y: 200};
 
-        framesPerSecond = 10;
+        framesPerSecond = 5;
       }
 
       
