@@ -1,14 +1,14 @@
+const DEBUG = false;
+
 let canvas;
-let snakeX = 40;
-let snakeY = 0;
 let direction = 0;
 let snakeLength = 20;
 const movement = 20;
 let startGame = false;
 
 const snakeHead = {
-  x: snakeX,
-  y: snakeY
+  x: 80,
+  y: 200
 }
 
 let appleLocation = {
@@ -18,7 +18,7 @@ let appleLocation = {
 
 const allowedKeys = [37, 38, 39, 40]
 
-const snake = [snakeHead, {x:20,y:0}, {x:0,y:0}];
+const snake = [snakeHead, {x:60,y:200}, {x:40,y:200}];
 
 const colorRectangle = (leftX, topY, width, height, color) => {
   canvasContext.fillStyle = color;
