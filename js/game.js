@@ -6,6 +6,13 @@ let snakeLength = 20;
 const movement = 5;
 let startGame = false;
 
+const creatSnakeHead = () => {
+  const snakeHead = [];
+  for (let i = 0; i < 20; i++) {
+    snakeHead.push({x: i, y: 0})
+  }
+}
+
 const snakeHead = {
   x: snakeX,
   y: snakeY
@@ -123,6 +130,22 @@ const move = () => {
   }
 
   if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
+    if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
+      // switch (direction) {
+      //   case 37:
+      //     snake.push({x:snake[snake.length - 1].x + 19, y:snake[snake.length -1].y});
+      //     break;
+      //   case 39:
+      //     snake.push({x:snake[snake.length - 1].x - 19, y:snake[snake.length -1].y});
+      //     break;
+  
+      //   case 38:
+      //     snake.push({x:snake[snake.length - 1].x , y:snake[snake.length -1].y + 19});
+      //     break;
+      //   case 40:
+      //     snake.push({x:snake[snake.length - 1].x, y:snake[snake.length -1].y - 19});
+      //     break;
+      // }
     snake.push({x:snake[snake.length - 1].x, y:snake[snake.length -1].y});
   }
   
