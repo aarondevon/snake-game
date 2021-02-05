@@ -1,17 +1,18 @@
-const DEBUG = false;
+const DEBUG = true;
 
 let canvas;
 let direction = 0;
 let snakeLength = 20;
 const movement = 20;
 let startGame = false;
+let collision = false;
 
 const snakeHead = {
   x: 80,
   y: 200
 }
 
-let appleLocation = {
+const appleLocation = {
   x: 100,
   y: 120
 }
@@ -33,8 +34,8 @@ const colorCircle = (centerX, centerY, radius, drawColor) => {
   canvasContext.fill();
 }
 
-let cols = 24 
-let rows = 21
+let cols = 30
+let rows = 30
 let squareSize = 20
 
 const colorBoard = (squareSize, rows, cols) => {
@@ -94,6 +95,12 @@ const move = () => {
     currentDirection();
   }
 
+  if ( snakeHead.x < 60 || snakeHead.x > canvas.width - 60) {
+    collision = true;
+    console.log('side hit');
+  }
+
+
   if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
     switch (direction) {
       case 37:
@@ -134,13 +141,29 @@ window.onload = function () {
 
       let framesPerSecond = 5.5;
 
-      setInterval(() => {
-      if (direction) {
-        move();
+      if (DEBUG) {
+        direction = 0;
+        snakeHead.x = 20; 
+        snakeHead.y = 200;
+        snake[1] = {x: 40, y: 200};
+        snake[2] = {x: 60, y: 200};
+
+        framesPerSecond = 10;
       }
-        
-      draw();
-      }, 1000 / framesPerSecond);
+
+      
+        setInterval(() => {
+          if (!collision) {
+          if (direction) {
+            move();
+          }
+            
+          draw();
+        }
+          }, 1000 / framesPerSecond);
+
+
+
 
       document.addEventListener("keydown", function(event) {
         if ( allowedKeys.includes(event.which))
