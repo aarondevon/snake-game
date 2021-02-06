@@ -1,8 +1,11 @@
 const DEBUG = true;
 
 let canvas;
+let canvasContext;
 let direction = 0;
-const snakeLength = 20;
+const gridSize = 20;
+const cols = 30;
+const rows = 30;
 const movement = 20;
 const startGame = false;
 let collision = false;
@@ -34,20 +37,16 @@ const colorCircle = (centerX, centerY, radius, drawColor) => {
   canvasContext.fill();
 };
 
-const cols = 30;
-const rows = 30;
-const squareSize = 20;
-
-const colorBoard = (squareSize, rows, cols) => {
+const colorBoard = () => {
   const lightGreen = '#8ECC39';
   const mediumGreen = '#A7D948';
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
       if ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) {
-        colorRectangle(i * squareSize, j * squareSize, squareSize, squareSize, lightGreen);
+        colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, lightGreen);
       } else {
-        colorRectangle(i * squareSize, j * squareSize, squareSize, squareSize, mediumGreen);
+        colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, mediumGreen);
       }
     }
   }
@@ -55,14 +54,14 @@ const colorBoard = (squareSize, rows, cols) => {
 
 const draw = () => {
   colorRectangle(0, 0, canvas.width, canvas.height, 'green');
-  colorBoard(squareSize, rows, cols);
+  colorBoard(gridSize, rows, cols);
 
   // Apple
-  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (squareSize / 2), 'red');
+  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), 'red');
 
   // Snake
   snake.forEach((section) => {
-    colorRectangle(section.x, section.y, squareSize, squareSize, 'black');
+    colorRectangle(section.x, section.y, gridSize, gridSize, 'black');
   });
 };
 
@@ -146,7 +145,7 @@ const move = () => {
 window.onload = function () {
   // eslint-disable-next-line no-undef
   canvas = document.querySelector('#canvas');
-  const canvasContext = canvas.getContext('2d');
+  canvasContext = canvas.getContext('2d');
 
   let framesPerSecond = 5.5;
 
