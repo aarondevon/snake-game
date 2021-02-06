@@ -132,10 +132,12 @@ const move = () => {
   }
 
   // Check to see if snake hits itself
-
   for (let i = 1; i < snake.length; i++) {
     if (JSON.stringify(snake[i]) === JSON.stringify(snakeHead)) {
       collision = true;
+      for (let i = 0; i < snake.length; i++) {
+        snake[i] = lastPosition[i];
+      }
       console.log('Snake on snake collision');
     }
   }
