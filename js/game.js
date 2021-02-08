@@ -18,14 +18,48 @@ const snakeHead = {
   y: 200,
 };
 
-const appleLocation = {
-  x: 100,
-  y: 120,
-};
+const appleLocation = {};
 
 const allowedKeys = [37, 38, 39, 40];
 
 const snake = [snakeHead, { x: 60, y: 200 }, { x: 40, y: 200 }];
+
+const generateX = () => {
+  let isReady = false;
+  let number;
+  while (isReady === false) {
+    number = Math.floor((Math.random() * 580) + 1);
+    if (number % gridSize === 0) {
+      isReady = true;
+    }
+  }
+  return number;
+};
+
+const generateY = () => {
+  let isReady = false;
+  let number;
+  while (isReady === false) {
+    number = Math.floor((Math.random() * 460) + 1);
+    if (number % gridSize === 0) {
+      isReady = true;
+    }
+  }
+  return number;
+};
+// Generate a random position for the apple
+const randomApplePosition = () => {
+  let isReady = false;
+  do {
+    appleLocation.x = generateX();
+    appleLocation.y = generateY();
+    for (let i = 0; i < snake.length; i += 1) {
+      if (!(JSON.stringify(snake[i]) === JSON.stringify(appleLocation))) {
+        isReady = true;
+      }
+    }
+  } while (isReady === false);
+};
 
 const colorRectangle = (leftX, topY, width, height, color) => {
   canvasContext.fillStyle = color;
@@ -140,9 +174,11 @@ const move = () => {
     snake[i] = lastPosition[i - 1];
   }
 
+  // see if snake is eating an apple
   if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
     snake.push({ x: snake[snake.length - 1].x, y: snake[snake.length - 1].y });
     score += 1;
+    randomApplePosition();
     scoreCount.innerText = score;
   }
 
@@ -194,6 +230,9 @@ window.onload = function () {
 
     framesPerSecond = 5;
   }
+
+  // Set apple location
+  randomApplePosition();
 
   setInterval(() => {
     if (!collision) {
