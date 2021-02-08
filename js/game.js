@@ -38,8 +38,8 @@ const colorCircle = (centerX, centerY, radius, drawColor) => {
 };
 
 const colorBoard = () => {
-  const lightGreen = '#8ECC39';
-  const mediumGreen = '#A7D948';
+  const lightGreen = '#365902';
+  const mediumGreen = '#172601';
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
@@ -57,11 +57,15 @@ const draw = () => {
   colorBoard(gridSize, rows, cols);
 
   // Apple
-  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), 'red');
+  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), '#9E170F');
 
   // Snake
-  snake.forEach((section) => {
-    colorRectangle(section.x, section.y, gridSize, gridSize, 'black');
+  snake.forEach((section, index) => {
+    if (index === 0) {
+      colorRectangle(section.x, section.y, gridSize, gridSize, '#D9863D');
+    } else {
+      colorRectangle(section.x, section.y, gridSize, gridSize, '#C1D911');
+    }
   });
 };
 

@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanalei&display=swap');
+
+body {
+    background-color: #172601;
+    font-family: 'Hanalei', cursive;
+    font-size: 16px;
+    margin: 0 auto;
+    width: 900px;
+}
+
+.center {
+    justify-content: center;
+}
+
+.flex {
+    display: flex;
+}
+
+#game-title {
+    color: #D9863D;
+    font-size: 4rem;
+    font-weight: lighter;
+    margin-bottom: 1rem;
+}
+
+#canvas {
+    border: .3125rem solid #85A60F;
+}
