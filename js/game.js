@@ -1,5 +1,8 @@
 const DEBUG = true;
 
+const scoreCount = document.querySelector('#score-count');
+let score = 0;
+
 let canvas;
 let canvasContext;
 let direction = 0;
@@ -127,6 +130,8 @@ const move = () => {
 
   if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
     snake.push({ x: snake[snake.length - 1].x, y: snake[snake.length - 1].y });
+    score += 1;
+    scoreCount.innerText = score;
   }
 
   // Check to see if snake hit the sides of the board
