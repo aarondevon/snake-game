@@ -8,7 +8,7 @@ let canvasContext;
 let direction = 0;
 const gridSize = 20;
 const cols = 30;
-const rows = 30;
+const rows = 24;
 const movement = 20;
 const startGame = false;
 let collision = false;
@@ -72,6 +72,18 @@ const draw = () => {
       // colorRectangle(section.x, section.y, gridSize, gridSize, '#C1D911');
     }
   });
+
+  if (collision) {
+    colorRectangle(60, 0, 480, canvas.height, 'rgba(23, 38, 1, 0.9)');
+    canvasContext.font = '72px Hanalei';
+    canvasContext.fillStyle = '#85A60F';
+    canvasContext.fillText('Game Over', 130, 150);
+    canvasContext.fillText(`Score: ${score}`, 130, 225);
+
+    canvasContext.font = '48px Hanalei';
+    canvasContext.fillText('Press Spacebar', 130, 300);
+    canvasContext.fillText('to play again', 145, 350);
+  }
 };
 
 let currentDirection;
@@ -138,7 +150,12 @@ const move = () => {
   if (snakeHead.x < 0 || snakeHead.x > canvas.width - 20 || snakeHead.y < 0 || snakeHead.y > canvas.height - 20) {
     collision = true;
     for (let i = 0; i < snake.length; i++) {
-      snake[i] = lastPosition[i];
+      if (i === 0) {
+        snakeHead.x = lastPosition[i].x;
+        snakeHead.y = lastPosition[i].y;
+      } else {
+        snake[i] = lastPosition[i];
+      }
     }
   }
 
@@ -147,7 +164,13 @@ const move = () => {
     if (JSON.stringify(snake[i]) === JSON.stringify(snakeHead)) {
       collision = true;
       for (let i = 0; i < snake.length; i++) {
-        snake[i] = lastPosition[i];
+        if (i === 0) {
+          snakeHead.x = lastPosition[i].x;
+          snakeHead.y = lastPosition[i].y;
+        } else {
+          snake[i] = lastPosition[i];
+        }
+        // snake[i] = lastPosition[i];
       }
       console.log('Snake on snake collision');
     }
@@ -177,13 +200,26 @@ window.onload = function () {
       if (direction) {
         move();
       }
-
+      console.log('before draw')
       draw();
     }
   }, 1000 / framesPerSecond);
 
   // eslint-disable-next-line no-undef
   document.addEventListener('keydown', (event) => {
+    console.log(event.key);
+    if (collision === true && event.key === ' ') {
+      score = 0;
+      scoreCount.innerText = score;
+      direction = 0;
+      snake.length = 0;
+      snakeHead.x = 60;
+      snakeHead.y = 200;
+      snake[0] = snakeHead;
+      snake[1] = { x: 40, y: 200 };
+      snake[2] = { x: 20, y: 200 };
+      collision = false;
+    }
     if (allowedKeys.includes(event.which)) {
       let key;
 
