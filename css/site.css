@@ -4,16 +4,28 @@ body {
     background-color: #172601;
     font-family: 'Hanalei', cursive;
     font-size: 16px;
-    margin: 0 auto;
-    max-width: 900px;
+
+}
+
+header  {
+
 }
 
 .center {
     justify-content: center;
 }
 
+.column {
+    flex-direction: column;
+}
+
 .flex {
     display: flex;
+}
+
+#game-container {
+    margin: 0 auto;
+    max-width: 600px;
 }
 
 #game-title {
@@ -21,8 +33,27 @@ body {
     font-size: 4rem;
     font-weight: lighter;
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 #canvas {
     border: .3125rem solid #85A60F;
+}
+
+.score-container {
+    color: #C1D911;
+    margin-bottom: .25rem;
+}
+
+#score-title {
+    display: inline-block;
+    font-size: 2rem;
+    margin: 0;
+}
+
+#score-count {
+    display: inline-block;
+    font-size: 2rem;
+    margin: 0;
+    padding-left: .5rem;
 }
