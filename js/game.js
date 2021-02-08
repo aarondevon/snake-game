@@ -62,9 +62,11 @@ const draw = () => {
   // Snake
   snake.forEach((section, index) => {
     if (index === 0) {
-      colorRectangle(section.x, section.y, gridSize, gridSize, '#D9863D');
+      colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#D9863D');
+      // colorRectangle(section.x, section.y, gridSize, gridSize, '#D9863D');
     } else {
-      colorRectangle(section.x, section.y, gridSize, gridSize, '#C1D911');
+      colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
+      // colorRectangle(section.x, section.y, gridSize, gridSize, '#C1D911');
     }
   });
 };
