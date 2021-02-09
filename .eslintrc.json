@@ -2,6 +2,8 @@
   "extends": "airbnb",
   "rules": {
     "func-names": ["error", "never"],
-    "linebreak-style": 0
+    "linebreak-style": 0,
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-undef": "off"
   }
 }
