@@ -1,8 +1,5 @@
-const DEBUG = true;
-
 const scoreCount = document.querySelector('#score-count');
 let score = 0;
-
 let canvas;
 let canvasContext;
 let direction = 0;
@@ -18,17 +15,16 @@ const snakeHead = {
   y: 200,
 };
 
-const appleLocation = {};
-
 const allowedKeys = [37, 38, 39, 40];
 
+// Initial starting snake
 const snake = [snakeHead, { x: 60, y: 200 }, { x: 40, y: 200 }];
 
-const generateX = () => {
+const generateCoordinate = (range) => {
   let isReady = false;
   let number;
   while (isReady === false) {
-    number = Math.floor((Math.random() * 580) + 1);
+    number = Math.floor((Math.random() * range) + 1);
     if (number % gridSize === 0) {
       isReady = true;
     }
@@ -36,26 +32,20 @@ const generateX = () => {
   return number;
 };
 
-const generateY = () => {
-  let isReady = false;
-  let number;
-  while (isReady === false) {
-    number = Math.floor((Math.random() * 460) + 1);
-    if (number % gridSize === 0) {
-      isReady = true;
-    }
-  }
-  return number;
-};
+const appleLocation = {};
+
 // Generate a random position for the apple
 const randomApplePosition = () => {
   let isReady = false;
   do {
-    appleLocation.x = generateX();
-    appleLocation.y = generateY();
+    appleLocation.x = generateCoordinate(580);
+    appleLocation.y = generateCoordinate(460);
     for (let i = 0; i < snake.length; i += 1) {
       if (!(JSON.stringify(snake[i]) === JSON.stringify(appleLocation))) {
         isReady = true;
+      } else {
+        isReady = false;
+        break;
       }
     }
   } while (isReady === false);
@@ -122,6 +112,19 @@ const draw = () => {
 
 let currentDirection;
 
+const snakeBodySetLastPosition = (lastPosition) => {
+  collision = true;
+  for (let i = 0; i < snake.length; i++) {
+    if (i === 0) {
+      snakeHead.x = lastPosition[i].x;
+      snakeHead.y = lastPosition[i].y;
+    } else {
+      snake[i] = lastPosition[i];
+    }
+    // snake[i] = lastPosition[i];
+  }
+};
+
 const snakeMove = {
   left() {
     snakeHead.x -= movement;
@@ -147,6 +150,7 @@ const move = () => {
   }
 
   if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
+    // eslint-disable-next-line default-case
     switch (direction) {
       case 37:
         currentDirection = snakeMove.left;
@@ -184,30 +188,13 @@ const move = () => {
 
   // Check to see if snake hit the sides of the board
   if (snakeHead.x < 0 || snakeHead.x > canvas.width - 20 || snakeHead.y < 0 || snakeHead.y > canvas.height - 20) {
-    collision = true;
-    for (let i = 0; i < snake.length; i++) {
-      if (i === 0) {
-        snakeHead.x = lastPosition[i].x;
-        snakeHead.y = lastPosition[i].y;
-      } else {
-        snake[i] = lastPosition[i];
-      }
-    }
+    snakeBodySetLastPosition(lastPosition);
   }
 
   // Check to see if snake hits itself
   for (let i = 1; i < snake.length; i++) {
     if (JSON.stringify(snake[i]) === JSON.stringify(snakeHead)) {
-      collision = true;
-      for (let i = 0; i < snake.length; i++) {
-        if (i === 0) {
-          snakeHead.x = lastPosition[i].x;
-          snakeHead.y = lastPosition[i].y;
-        } else {
-          snake[i] = lastPosition[i];
-        }
-        // snake[i] = lastPosition[i];
-      }
+      snakeBodySetLastPosition(lastPosition);
       console.log('Snake on snake collision');
     }
   }
@@ -219,17 +206,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
   canvasContext = canvas.getContext('2d');
 
-  let framesPerSecond = 5.5;
-
-  if (DEBUG) {
-    direction = 0;
-    snakeHead.x = 20;
-    snakeHead.y = 200;
-    snake[1] = { x: 40, y: 200 };
-    snake[2] = { x: 60, y: 200 };
-
-    framesPerSecond = 5;
-  }
+  const framesPerSecond = 5.5;
 
   // Set apple location
   randomApplePosition();
@@ -239,14 +216,11 @@ window.onload = function () {
       if (direction) {
         move();
       }
-      console.log('before draw')
       draw();
     }
   }, 1000 / framesPerSecond);
 
-  // eslint-disable-next-line no-undef
   document.addEventListener('keydown', (event) => {
-    console.log(event.key);
     if (collision === true && event.key === ' ') {
       score = 0;
       scoreCount.innerText = score;
