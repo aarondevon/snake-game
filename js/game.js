@@ -119,6 +119,8 @@ const draw = () => {
   drawGameOverScreen();
 };
 
+const getLastPosition = () => snake.map((position) => ({ x: position.x, y: position.y }));
+
 const setKeyBufferLength = () => {
   if (keyBuffer.length > 2) {
     keyBuffer.length = 2;
@@ -180,35 +182,29 @@ const moveSnake = () => {
   }
 };
 
-const move = () => {
-  // array of last positions
-  const lastPosition = snake.map((position) => ({ x: position.x, y: position.y }));
-
-  setKeyBufferLength();
-
-  if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
-    moveSnake();
-  }
-
+const updateSnakePosition = (lastPosition) => {
   for (let i = snake.length - 1; i > 0; i--) {
     snake[i] = lastPosition[i - 1];
   }
+};
 
-  // see if snake is eating an apple
+const isSnakeOnApple = () => {
   if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
     snake.push({ x: snake[snake.length - 1].x, y: snake[snake.length - 1].y });
     score += 1;
     randomApplePosition();
     scoreCount.innerText = score;
   }
+};
 
-  // Check to see if snake hit the sides of the board
+const snakeSideCollision = (lastPosition) => {
   if (snakeHead.x < 0 || snakeHead.x > canvas.width - 20 || snakeHead.y < 0 || snakeHead.y > canvas.height - 20) {
     collision = true;
     snakeBodySetLastPosition(lastPosition);
   }
+};
 
-  // Check to see if snake hits itself
+const snakeOnSnakeCollision = (lastPosition) => {
   for (let i = 1; i < snake.length; i++) {
     if (JSON.stringify(snake[i]) === JSON.stringify(snakeHead)) {
       collision = true;
@@ -216,6 +212,102 @@ const move = () => {
     }
   }
 };
+
+const move = () => {
+  // array of last positions
+  const lastPosition = getLastPosition();
+
+  setKeyBufferLength();
+
+  // Move snake within the grid
+  if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
+    moveSnake();
+  }
+
+  updateSnakePosition(lastPosition);
+
+  // see if snake is eating an apple
+  isSnakeOnApple();
+
+  // Check to see if snake hit the sides of the board
+  snakeSideCollision(lastPosition);
+
+  // Check to see if snake hits itself
+  snakeOnSnakeCollision(lastPosition);
+};
+
+const resetScore = () => {
+  score = 0;
+};
+
+const resetScoreCounter = () => {
+  scoreCount.innerText = score;
+};
+
+const clearKeyBuffer = () => {
+  keyBuffer.length = 0;
+};
+
+const resetSnakePosition = () => {
+  snake.length = 0;
+  snakeHead.x = 60;
+  snakeHead.y = 200;
+  snake[0] = snakeHead;
+  snake[1] = { x: 40, y: 200 };
+  snake[2] = { x: 20, y: 200 };
+};
+
+const resetCollision = () => {
+  collision = false;
+};
+
+const resetGame = () => {
+  resetScore();
+  resetScoreCounter();
+  clearKeyBuffer();
+  resetSnakePosition();
+  resetCollision();
+};
+
+const isValidDirection = (key) => {
+  if (keyBuffer.length === 0 && key === 'ArrowLeft') {
+    return false;
+  }
+
+  if (keyBuffer[0] === key) {
+    return false;
+  }
+
+  if ((keyBuffer[0] === 'ArrowLeft' && key === 'ArrowRight') || (keyBuffer[0] === 'ArrowRight' && key === 'ArrowLeft')) {
+    return false;
+  }
+
+  if ((keyBuffer[0] === 'ArrowDown' && key === 'ArrowUp') || (keyBuffer[0] === 'ArrowUp' && key === 'ArrowDown')) {
+    return false;
+  }
+
+  return true;
+};
+
+const setDirection = (validDirection, key) => {
+  if (validDirection === true) {
+    keyBuffer.push(key);
+  }
+};
+
+document.addEventListener('keydown', (event) => {
+  if (collision === true && event.key === ' ') {
+    resetGame();
+  }
+
+  if (allowedKeys.includes(event.key)) {
+    const { key } = event;
+
+    if (collision === false) {
+      setDirection(isValidDirection(key), key);
+    }
+  }
+});
 
 const executeMove = () => {
   if (keyBuffer.length > 0) {
@@ -238,77 +330,4 @@ window.onload = function () {
       draw();
     }
   }, 1000 / framesPerSecond);
-
-  const resetScore = () => {
-    score = 0;
-  };
-
-  const resetScoreCounter = () => {
-    scoreCount.innerText = score;
-  };
-
-  const clearKeyBuffer = () => {
-    keyBuffer.length = 0;
-  };
-
-  const resetSnakePosition = () => {
-    snake.length = 0;
-    snakeHead.x = 60;
-    snakeHead.y = 200;
-    snake[0] = snakeHead;
-    snake[1] = { x: 40, y: 200 };
-    snake[2] = { x: 20, y: 200 };
-  };
-
-  const resetCollision = () => {
-    collision = false;
-  };
-
-  const resetGame = () => {
-    resetScore();
-    resetScoreCounter();
-    clearKeyBuffer();
-    resetSnakePosition();
-    resetCollision();
-  };
-
-  const isValidDirection = (key) => {
-    if (keyBuffer.length === 0 && key === 'ArrowLeft') {
-      return false;
-    }
-
-    if (keyBuffer[0] === key) {
-      return false;
-    }
-
-    if ((keyBuffer[0] === 'ArrowLeft' && key === 'ArrowRight') || (keyBuffer[0] === 'ArrowRight' && key === 'ArrowLeft')) {
-      return false;
-    }
-
-    if ((keyBuffer[0] === 'ArrowDown' && key === 'ArrowUp') || (keyBuffer[0] === 'ArrowUp' && key === 'ArrowDown')) {
-      return false;
-    }
-
-    return true;
-  };
-
-  const setDirection = (validDirection, key) => {
-    if (validDirection === true) {
-      keyBuffer.push(key);
-    }
-  };
-
-  document.addEventListener('keydown', (event) => {
-    if (collision === true && event.key === ' ') {
-      resetGame();
-    }
-
-    if (allowedKeys.includes(event.key)) {
-      const { key } = event;
-
-      if (collision === false) {
-        setDirection(isValidDirection(key), key);
-      }
-    }
-  });
 };
