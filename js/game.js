@@ -38,8 +38,8 @@ const appleLocation = {};
 const randomApplePosition = () => {
   let isReady = false;
   do {
-    appleLocation.x = generateCoordinate(580);
-    appleLocation.y = generateCoordinate(460);
+    appleLocation.x = generateCoordinate(canvas.width - gridSize);
+    appleLocation.y = generateCoordinate(canvas.height - gridSize);
     for (let i = 0; i < snake.length; i += 1) {
       if (!(JSON.stringify(snake[i]) === JSON.stringify(appleLocation))) {
         isReady = true;
@@ -121,7 +121,6 @@ const snakeBodySetLastPosition = (lastPosition) => {
     } else {
       snake[i] = lastPosition[i];
     }
-    // snake[i] = lastPosition[i];
   }
 };
 
@@ -206,7 +205,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
   canvasContext = canvas.getContext('2d');
 
-  const framesPerSecond = 5.5;
+  const framesPerSecond = 7;
 
   // Set apple location
   randomApplePosition();
