@@ -15,7 +15,7 @@ const snakeHead = {
   y: 200,
 };
 
-const allowedKeys = [37, 38, 39, 40];
+const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'];
 
 // Initial starting snake
 const snake = [snakeHead, { x: 60, y: 200 }, { x: 40, y: 200 }];
@@ -151,20 +151,20 @@ const move = () => {
   if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
     // eslint-disable-next-line default-case
     switch (direction) {
-      case 37:
+      case 'ArrowLeft':
         currentDirection = snakeMove.left;
         currentDirection();
         break;
-      case 39:
+      case 'ArrowRight':
         currentDirection = snakeMove.right;
         currentDirection();
         break;
 
-      case 38:
+      case 'ArrowUp':
         currentDirection = snakeMove.up;
         currentDirection();
         break;
-      case 40:
+      case 'ArrowDown':
         currentDirection = snakeMove.down;
         currentDirection();
         break;
@@ -232,21 +232,21 @@ window.onload = function () {
       snake[2] = { x: 20, y: 200 };
       collision = false;
     }
-    if (allowedKeys.includes(event.which)) {
+    if (allowedKeys.includes(event.key)) {
       let key;
-
+      console.log(event.key);
       if (!direction) {
-        direction = event.which;
+        direction = event.key;
       } else {
-        key = event.which;
+        key = event.key;
       }
 
-      if ((direction === 37 && key === 39) || (direction === 39 && key === 37)) {
-
-      } else if ((direction === 38 && key === 40) || (direction === 40 && key === 38)) {
-
+      if ((direction === 'ArrowLeft' && key === 'ArrowRight') || (direction === 'ArrowRight' && key === 'ArrowLeft')) {
+        return;
+      } else if ((direction === 'ArrowDown' && key === 'ArrowUp') || (direction === 'ArrowUp' && key === 'ArrowDown')) {
+        return;
       } else {
-        direction = event.which;
+        direction = event.key;
       }
     }
   });
