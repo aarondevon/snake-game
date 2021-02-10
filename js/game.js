@@ -78,14 +78,7 @@ const colorBoard = () => {
   }
 };
 
-const draw = () => {
-  colorRectangle(0, 0, canvas.width, canvas.height, 'green');
-  colorBoard(gridSize, rows, cols);
-
-  // Apple
-  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), '#9E170F');
-
-  // Snake
+const drawSnake = () => {
   snake.forEach((section, index) => {
     if (index === 0) {
       colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#D9863D');
@@ -95,7 +88,9 @@ const draw = () => {
       // colorRectangle(section.x, section.y, gridSize, gridSize, '#C1D911');
     }
   });
+};
 
+const drawGameOverScreen = () => {
   if (collision) {
     colorRectangle(60, 0, 480, canvas.height, 'rgba(23, 38, 1, 0.9)');
     canvasContext.font = '72px Hanalei';
@@ -109,6 +104,21 @@ const draw = () => {
   }
 };
 
+// Draw all elements
+const draw = () => {
+  colorRectangle(0, 0, canvas.width, canvas.height, 'green');
+  colorBoard(gridSize, rows, cols);
+
+  // Apple
+  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), '#9E170F');
+
+  // Snake
+  drawSnake();
+
+  // Game Over screen
+  drawGameOverScreen();
+};
+
 const setKeyBufferLength = () => {
   if (keyBuffer.length > 2) {
     keyBuffer.length = 2;
@@ -120,8 +130,6 @@ const updateDirection = () => {
     keyBuffer.shift();
   }
 };
-
-let currentDirection;
 
 const snakeBodySetLastPosition = (lastPosition) => {
   for (let i = 0; i < snake.length; i++) {
@@ -150,6 +158,28 @@ const snakeMoveDown = () => {
   snakeHead.y += movement;
 };
 
+const moveSnake = () => {
+  // eslint-disable-next-line default-case
+  switch (keyBuffer[0]) {
+    case 'ArrowLeft':
+      snakeMoveLeft();
+      updateDirection();
+      break;
+    case 'ArrowRight':
+      snakeMoveRight();
+      updateDirection();
+      break;
+    case 'ArrowUp':
+      snakeMoveUp();
+      updateDirection();
+      break;
+    case 'ArrowDown':
+      snakeMoveDown();
+      updateDirection();
+      break;
+  }
+};
+
 const move = () => {
   // array of last positions
   const lastPosition = snake.map((position) => ({ x: position.x, y: position.y }));
@@ -157,27 +187,7 @@ const move = () => {
   setKeyBufferLength();
 
   if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
-    // eslint-disable-next-line default-case
-    switch (keyBuffer[0]) {
-      case 'ArrowLeft':
-        snakeMoveLeft();
-        updateDirection();
-        break;
-      case 'ArrowRight':
-        snakeMoveRight();
-        updateDirection();
-        break;
-      case 'ArrowUp':
-        snakeMoveUp();
-        updateDirection();
-        break;
-      case 'ArrowDown':
-        snakeMoveDown();
-        updateDirection();
-        break;
-    }
-  } else {
-    currentDirection();
+    moveSnake();
   }
 
   for (let i = snake.length - 1; i > 0; i--) {
