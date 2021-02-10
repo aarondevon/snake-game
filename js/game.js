@@ -228,7 +228,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
   canvasContext = canvas.getContext('2d');
 
-  const framesPerSecond = 1;
+  const framesPerSecond = 8;
 
   // Set apple location
   randomApplePosition();
@@ -275,6 +275,10 @@ window.onload = function () {
 
   const isValidDirection = (key) => {
     if (keyBuffer.length === 0 && key === 'ArrowLeft') {
+      return false;
+    }
+
+    if (keyBuffer[0] === key) {
       return false;
     }
 
