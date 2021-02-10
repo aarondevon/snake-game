@@ -106,7 +106,7 @@ const drawGameOverScreen = () => {
 
 // Draw all elements
 const draw = () => {
-  colorRectangle(0, 0, canvas.width, canvas.height, 'green');
+  // Draw game board
   colorBoard(gridSize, rows, cols);
 
   // Apple
