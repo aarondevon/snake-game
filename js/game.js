@@ -6,7 +6,6 @@ const gridSize = 20;
 const cols = 30;
 const rows = 24;
 const movement = 20;
-const startGame = false;
 let collision = false;
 const keyBuffer = [];
 
@@ -135,29 +134,25 @@ const snakeBodySetLastPosition = (lastPosition) => {
   }
 };
 
-const snakeMove = {
-  left() {
-    snakeHead.x -= movement;
-  },
-  right() {
-    snakeHead.x += movement;
-  },
-  up() {
-    snakeHead.y -= movement;
-  },
-  down() {
-    snakeHead.y += movement;
-  },
+const snakeMoveLeft = () => {
+  snakeHead.x -= movement;
+};
+
+const snakeMoveRight = () => {
+  snakeHead.x += movement;
+};
+
+const snakeMoveUp = () => {
+  snakeHead.y -= movement;
+};
+
+const snakeMoveDown = () => {
+  snakeHead.y += movement;
 };
 
 const move = () => {
   // array of last positions
   const lastPosition = snake.map((position) => ({ x: position.x, y: position.y }));
-
-  if (startGame) {
-    currentDirection = snakeMove.right;
-    currentDirection();
-  }
 
   setKeyBufferLength();
 
@@ -165,23 +160,19 @@ const move = () => {
     // eslint-disable-next-line default-case
     switch (keyBuffer[0]) {
       case 'ArrowLeft':
-        currentDirection = snakeMove.left;
-        currentDirection();
+        snakeMoveLeft();
         updateDirection();
         break;
       case 'ArrowRight':
-        currentDirection = snakeMove.right;
-        currentDirection();
+        snakeMoveRight();
         updateDirection();
         break;
       case 'ArrowUp':
-        currentDirection = snakeMove.up;
-        currentDirection();
+        snakeMoveUp();
         updateDirection();
         break;
       case 'ArrowDown':
-        currentDirection = snakeMove.down;
-        currentDirection();
+        snakeMoveDown();
         updateDirection();
         break;
     }
