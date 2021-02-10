@@ -222,9 +222,7 @@ const executeMove = () => {
   }
 };
 
-// eslint-disable-next-line no-undef
 window.onload = function () {
-  // eslint-disable-next-line no-undef
   canvas = document.querySelector('#canvas');
   canvasContext = canvas.getContext('2d');
 
