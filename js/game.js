@@ -188,6 +188,26 @@ const updateSnakePosition = (lastPosition) => {
   }
 };
 
+const getNewTailPosition = () => {
+  const snakeTail = snake[snake.length - 1];
+  const snakeTailParent = snake[snake.length - 2];
+  if (
+    snakeTail.x === snakeTailParent.x
+    && snakeTail.y === snakeTailParent.y
+  ) {
+    return snakeTail;
+  }
+
+  if (snakeTail.x === snakeTailParent.x) {
+    snakeTail.y += snakeTail.y < snakeTailParent.y ? 1 : -1;
+    return snakeTail;
+  }
+  if (snakeTail.y === snakeTailParent.y) {
+    snakeTail.x += snakeTail.x < snakeTailParent.x ? 1 : -1;
+    return snakeTail;
+  }
+};
+
 const moveBody = (lastPosition) => {
   const xPositionIsGridLengthApart =
     Math.abs(snake[1].x - snake[0].x) === gridSize;
@@ -235,6 +255,7 @@ const move = () => {
   }
 
   moveBody(lastPosition);
+  getNewTailPosition();
   moveSnake();
 
   // see if snake is eating an apple
