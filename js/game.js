@@ -5,7 +5,7 @@ let canvasContext;
 const gridSize = 20;
 const cols = 30;
 const rows = 24;
-const movement = 20;
+const movement = 1;
 let collision = false;
 const keyBuffer = [];
 
@@ -165,19 +165,19 @@ const moveSnake = () => {
   switch (keyBuffer[0]) {
     case 'ArrowLeft':
       snakeMoveLeft();
-      updateDirection();
+      // updateDirection();
       break;
     case 'ArrowRight':
       snakeMoveRight();
-      updateDirection();
+      // updateDirection();
       break;
     case 'ArrowUp':
       snakeMoveUp();
-      updateDirection();
+      // updateDirection();
       break;
     case 'ArrowDown':
       snakeMoveDown();
-      updateDirection();
+      // updateDirection();
       break;
   }
 };
@@ -185,6 +185,16 @@ const moveSnake = () => {
 const updateSnakePosition = (lastPosition) => {
   for (let i = snake.length - 1; i > 0; i--) {
     snake[i] = lastPosition[i - 1];
+  }
+};
+
+const moveBody = (lastPosition) => {
+  const xPositionIsGridLengthApart =
+    Math.abs(snake[1].x - snake[0].x) === gridSize;
+  const yPositionIsGridLengthApart =
+    Math.abs(snake[1].y - snake[0].y) === gridSize;
+  if (xPositionIsGridLengthApart || yPositionIsGridLengthApart) {
+    updateSnakePosition(lastPosition);
   }
 };
 
@@ -218,13 +228,14 @@ const move = () => {
   const lastPosition = getLastPosition();
 
   setKeyBufferLength();
-
   // Move snake within the grid
-  if ((snakeHead.x % 20 === 0 || snakeHead.x === 0) && (snakeHead.y % 20 === 0 || snakeHead.y === 0)) {
-    moveSnake();
+  if (snakeHead.x % 20 === 0 && snakeHead.y % 20 === 0) {
+    // moveSnake();
+    updateDirection();
   }
 
-  updateSnakePosition(lastPosition);
+  moveBody(lastPosition);
+  moveSnake();
 
   // see if snake is eating an apple
   isSnakeOnApple();
@@ -319,7 +330,7 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
   canvasContext = canvas.getContext('2d');
 
-  const framesPerSecond = 8;
+  const framesPerSecond = 100;
 
   // Set apple location
   randomApplePosition();
