@@ -1,4 +1,5 @@
 const scoreCount = document.querySelector('#current-score-count');
+const highScoreCount = document.querySelector('#high-score-count');
 let score = 0;
 let canvas;
 let canvasContext;
@@ -347,7 +348,7 @@ const updateHighScore = () => {
   const highScore = parseInt(localStorage.getItem('highScore'), 10);
   if (score > highScore) {
     localStorage.setItem('highScore', score);
-    document.querySelector('#high-score-count').innerText = score;
+    highScoreCount.innerText = score;
   }
 };
 
@@ -361,9 +362,9 @@ window.onload = function () {
   canvas = document.querySelector('#canvas');
   canvasContext = canvas.getContext('2d');
   if (localStorage.getItem('highScore') === null) {
-    localStorage.setItem('highScore', 0);
+    localStorage.setItem('highScore', '0');
   } else {
-    document.querySelector('#high-score-count').innerText = localStorage.getItem('highScore');
+    highScoreCount.innerText = localStorage.getItem('highScore');
   }
 
   const framesPerSecond = 140;
