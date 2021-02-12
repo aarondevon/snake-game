@@ -40,18 +40,22 @@ header  {
     border: .3125rem solid #85A60F;
 }
 
-.score-container {
+#score-container {
+    justify-content: space-between;
+}
+
+.current-score-container, .high-score-container {
     color: #85A60F;
     margin-bottom: .25rem;
 }
 
-#score-title {
+#current-score-title, #high-score-title {
     display: inline-block;
     font-size: 2rem;
     margin: 0;
 }
 
-#score-count {
+#current-score-count, #high-score-count {
     display: inline-block;
     font-size: 2rem;
     margin: 0;

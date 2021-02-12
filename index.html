@@ -8,12 +8,19 @@
   </head>
   <body>
   <div id="game-container" >
-    <header class="">
+    <header>
       <h1 id="game-title">Snake Game</h1>
-      <div class="score-container">
-        <h3 id="score-title">Score:</h3>
-        <p id="score-count">0</p>
+      <div id="score-container" class="flex">
+        <div class="current-score-container">
+          <h3 id="current-score-title">Score:</h3>
+          <p id="current-score-count">0</p>
+        </div>
+        <div class="high-score-container">
+          <h3 id="high-score-title">High Score:</h3>
+          <p id="high-score-count">0</p>
+        </div>
       </div>
+
     </header>
     <main class="flex center">
       <canvas id="canvas" width="600" height="480"></canvas>

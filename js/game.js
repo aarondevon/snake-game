@@ -1,4 +1,4 @@
-const scoreCount = document.querySelector('#score-count');
+const scoreCount = document.querySelector('#current-score-count');
 let score = 0;
 let canvas;
 let canvasContext;
@@ -10,14 +10,18 @@ let collision = false;
 const keyBuffer = [];
 
 const snakeHead = {
-  x: 80,
-  y: 200,
+  x: gridSize * 3,
+  y: gridSize * 10,
 };
 
 const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'];
 
 // Initial starting snake
-const snake = [snakeHead, { x: 60, y: 200 }, { x: 40, y: 200 }];
+const snake = [snakeHead,
+  { x: gridSize * 2, y: gridSize * 10 },
+  { x: gridSize, y: gridSize * 10 },
+  { x: gridSize, y: gridSize * 10 },
+];
 
 const generateCoordinate = (range) => {
   let isReady = false;
@@ -80,12 +84,9 @@ const colorBoard = () => {
 
 const drawSnake = () => {
   snake.forEach((section, index) => {
-    if (index === 0) {
-      colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#D9863D');
-      // colorRectangle(section.x, section.y, gridSize, gridSize, '#D9863D');
-    } else {
-      colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
-      // colorRectangle(section.x, section.y, gridSize, gridSize, '#C1D911');
+    colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
+    if (index === snake.length - 1) {
+      colorCircle((snakeHead.x + 10), (snakeHead.y + 10), (gridSize / 2), '#D9863D');
     }
   });
 };
@@ -282,11 +283,12 @@ const clearKeyBuffer = () => {
 
 const resetSnakePosition = () => {
   snake.length = 0;
-  snakeHead.x = 60;
-  snakeHead.y = 200;
+  snakeHead.x = gridSize * 3;
+  snakeHead.y = gridSize * 10;
   snake[0] = snakeHead;
-  snake[1] = { x: 40, y: 200 };
-  snake[2] = { x: 20, y: 200 };
+  snake[1] = { x: gridSize * 2, y: gridSize * 10 };
+  snake[2] = { x: gridSize, y: gridSize * 10 };
+  snake[3] = { x: gridSize, y: gridSize * 10 };
 };
 
 const resetCollision = () => {
@@ -341,6 +343,14 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+const updateHighScore = () => {
+  const highScore = parseInt(localStorage.getItem('highScore'), 10);
+  if (score > highScore) {
+    localStorage.setItem('highScore', score);
+    document.querySelector('#high-score-count').innerText = score;
+  }
+};
+
 const executeMove = () => {
   if (keyBuffer.length > 0) {
     move();
@@ -350,13 +360,22 @@ const executeMove = () => {
 window.onload = function () {
   canvas = document.querySelector('#canvas');
   canvasContext = canvas.getContext('2d');
+  if (localStorage.getItem('highScore') === null) {
+    localStorage.setItem('highScore', 0);
+  } else {
+    document.querySelector('#high-score-count').innerText = localStorage.getItem('highScore');
+  }
 
-  const framesPerSecond = 100;
+  const framesPerSecond = 140;
 
   // Set apple location
   randomApplePosition();
 
   setInterval(() => {
+    if (collision === true) {
+      updateHighScore();
+    }
+
     if (collision === false) {
       executeMove();
       draw();
