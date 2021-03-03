@@ -17,7 +17,7 @@ const CanvasRender = (function () {
     const lightGreen = '#365902';
     const mediumGreen = '#172601';
 
-    for (let j = 0; j < rows; j++) {
+    for (let j = 0; j < ROWS; j++) {
       for (let i = 0; i < COLS; i++) {
         if ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) {
           colorRectangle(i * GRID_SIZE, j * GRID_SIZE, GRID_SIZE, GRID_SIZE, lightGreen);
