@@ -1,4 +1,5 @@
-const CanvasRender = (function() {
+// eslint-disable-next-line
+const CanvasRender = (function () {
   const colorRectangle = (leftX, topY, width, height, color) => {
     canvasContext.fillStyle = color;
     canvasContext.fillRect(leftX, topY, width, height);
@@ -25,6 +26,10 @@ const CanvasRender = (function() {
         }
       }
     }
+  };
+
+  const drawApple = (centerX, centerY, radius, drawColor) => {
+    colorCircle(centerX, centerY, radius, drawColor);
   };
 
   const drawSnake = () => {
@@ -54,6 +59,7 @@ const CanvasRender = (function() {
     colorRectangle,
     colorCircle,
     colorBoard,
+    drawApple,
     drawSnake,
     drawGameOverScreen,
   };
