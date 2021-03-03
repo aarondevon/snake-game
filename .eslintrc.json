@@ -4,6 +4,9 @@
     "func-names": ["error", "never"],
     "linebreak-style": 0,
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "no-undef": "off"
+    "no-undef": "off",
+    "consistent-return": "off",
+    "operator-linebreak": "warn",
+    "max-len": "warn"
   }
 }
