@@ -58,16 +58,16 @@ const randomApplePosition = () => {
 // Draw all elements
 const draw = () => {
   // Draw game board
-  colorBoard(gridSize, rows, cols);
+  CanvasRender.colorBoard(gridSize, rows, cols);
 
   // Apple
-  colorCircle((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), '#9E170F');
+  CanvasRender.drawApple((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), '#9E170F');
 
   // Snake
-  drawSnake();
+  CanvasRender.drawSnake();
 
   // Game Over screen
-  drawGameOverScreen();
+  CanvasRender.drawGameOverScreen();
 };
 
 const getLastPosition = () => snake.map((position) => ({ x: position.x, y: position.y }));
