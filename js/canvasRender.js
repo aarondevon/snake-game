@@ -13,16 +13,16 @@ const CanvasRender = (function () {
     canvasContext.fill();
   };
 
-  const colorBoard = () => {
+  const colorBoard = (gridSize, rows, cols) => {
     const lightGreen = '#365902';
     const mediumGreen = '#172601';
 
-    for (let j = 0; j < ROWS; j++) {
-      for (let i = 0; i < COLS; i++) {
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols; i++) {
         if ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) {
-          colorRectangle(i * GRID_SIZE, j * GRID_SIZE, GRID_SIZE, GRID_SIZE, lightGreen);
+          colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, lightGreen);
         } else {
-          colorRectangle(i * GRID_SIZE, j * GRID_SIZE, GRID_SIZE, GRID_SIZE, mediumGreen);
+          colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, mediumGreen);
         }
       }
     }
@@ -32,16 +32,16 @@ const CanvasRender = (function () {
     colorCircle(centerX, centerY, radius, drawColor);
   };
 
-  const drawSnake = () => {
+  const drawSnake = (snake, gridSize) => {
     snake.forEach((section, index) => {
-      colorCircle((section.x + 10), (section.y + 10), (GRID_SIZE / 2), '#C1D911');
+      colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
       if (index === snake.length - 1) {
-        colorCircle((snakeHead.x + 10), (snakeHead.y + 10), (GRID_SIZE / 2), '#D9863D');
+        colorCircle((snake[0].x + 10), (snake[0].y + 10), (gridSize / 2), '#D9863D');
       }
     });
   };
 
-  const drawGameOverScreen = () => {
+  const drawGameOverScreen = (score) => {
     if (collision) {
       colorRectangle(60, 0, 480, canvas.height, 'rgba(23, 38, 1, 0.9)');
       canvasContext.font = '72px Hanalei';

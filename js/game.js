@@ -67,10 +67,10 @@ const draw = () => {
   CanvasRender.drawApple((appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9E170F');
 
   // Snake
-  CanvasRender.drawSnake();
+  CanvasRender.drawSnake(snake, GRID_SIZE);
 
   // Game Over screen
-  CanvasRender.drawGameOverScreen();
+  CanvasRender.drawGameOverScreen(score);
 };
 
 const getLastPosition = () => snake.map((position) => ({ x: position.x, y: position.y }));
