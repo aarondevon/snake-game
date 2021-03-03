@@ -18,11 +18,11 @@ const CanvasRender = (function () {
     const mediumGreen = '#172601';
 
     for (let j = 0; j < rows; j++) {
-      for (let i = 0; i < cols; i++) {
+      for (let i = 0; i < COLS; i++) {
         if ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) {
-          colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, lightGreen);
+          colorRectangle(i * GRID_SIZE, j * GRID_SIZE, GRID_SIZE, GRID_SIZE, lightGreen);
         } else {
-          colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, mediumGreen);
+          colorRectangle(i * GRID_SIZE, j * GRID_SIZE, GRID_SIZE, GRID_SIZE, mediumGreen);
         }
       }
     }
@@ -34,9 +34,9 @@ const CanvasRender = (function () {
 
   const drawSnake = () => {
     snake.forEach((section, index) => {
-      colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
+      colorCircle((section.x + 10), (section.y + 10), (GRID_SIZE / 2), '#C1D911');
       if (index === snake.length - 1) {
-        colorCircle((snakeHead.x + 10), (snakeHead.y + 10), (gridSize / 2), '#D9863D');
+        colorCircle((snakeHead.x + 10), (snakeHead.y + 10), (GRID_SIZE / 2), '#D9863D');
       }
     });
   };

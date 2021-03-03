@@ -1,27 +1,30 @@
 const scoreCount = document.querySelector('#current-score-count');
 const highScoreCount = document.querySelector('#high-score-count');
+
+const GRID_SIZE = 20;
+const COLS = 30;
+const ROWS = 24;
+const MOVEMENT = 1;
+
 let score = 0;
 let canvas;
 let canvasContext;
-const gridSize = 20;
-const cols = 30;
-const rows = 24;
-const movement = 1;
+
 let collision = false;
 const keyBuffer = [];
 
 const snakeHead = {
-  x: gridSize * 3,
-  y: gridSize * 10,
+  x: GRID_SIZE * 3,
+  y: GRID_SIZE * 10,
 };
 
 const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'];
 
 // Initial starting snake
 const snake = [snakeHead,
-  { x: gridSize * 2, y: gridSize * 10 },
-  { x: gridSize, y: gridSize * 10 },
-  { x: gridSize, y: gridSize * 10 },
+  { x: GRID_SIZE * 2, y: GRID_SIZE * 10 },
+  { x: GRID_SIZE, y: GRID_SIZE * 10 },
+  { x: GRID_SIZE, y: GRID_SIZE * 10 },
 ];
 
 const generateCoordinate = (range) => {
@@ -29,7 +32,7 @@ const generateCoordinate = (range) => {
   let number;
   while (isReady === false) {
     number = Math.floor((Math.random() * range) + 1);
-    if (number % gridSize === 0) {
+    if (number % GRID_SIZE === 0) {
       isReady = true;
     }
   }
@@ -42,8 +45,8 @@ const appleLocation = {};
 const randomApplePosition = () => {
   let isReady = false;
   do {
-    appleLocation.x = generateCoordinate(canvas.width - gridSize);
-    appleLocation.y = generateCoordinate(canvas.height - gridSize);
+    appleLocation.x = generateCoordinate(canvas.width - GRID_SIZE);
+    appleLocation.y = generateCoordinate(canvas.height - GRID_SIZE);
     for (let i = 0; i < snake.length; i += 1) {
       if (!(JSON.stringify(snake[i]) === JSON.stringify(appleLocation))) {
         isReady = true;
@@ -58,10 +61,10 @@ const randomApplePosition = () => {
 // Draw all elements
 const draw = () => {
   // Draw game board
-  CanvasRender.colorBoard(gridSize, rows, cols);
+  CanvasRender.colorBoard(GRID_SIZE, ROWS, COLS);
 
   // Apple
-  CanvasRender.drawApple((appleLocation.x + 10), (appleLocation.y + 10), (gridSize / 2), '#9E170F');
+  CanvasRender.drawApple((appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9E170F');
 
   // Snake
   CanvasRender.drawSnake();
@@ -96,19 +99,19 @@ const snakeBodySetLastPosition = (lastPosition) => {
 };
 
 const snakeMoveLeft = () => {
-  snakeHead.x -= movement;
+  snakeHead.x -= MOVEMENT;
 };
 
 const snakeMoveRight = () => {
-  snakeHead.x += movement;
+  snakeHead.x += MOVEMENT;
 };
 
 const snakeMoveUp = () => {
-  snakeHead.y -= movement;
+  snakeHead.y -= MOVEMENT;
 };
 
 const snakeMoveDown = () => {
-  snakeHead.y += movement;
+  snakeHead.y += MOVEMENT;
 };
 
 const moveSnake = () => {
@@ -161,9 +164,9 @@ const getNewTailPosition = () => {
 
 const moveBody = (lastPosition) => {
   const xPositionIsGridLengthApart =
-    Math.abs(snake[1].x - snake[0].x) === gridSize;
+    Math.abs(snake[1].x - snake[0].x) === GRID_SIZE;
   const yPositionIsGridLengthApart =
-    Math.abs(snake[1].y - snake[0].y) === gridSize;
+    Math.abs(snake[1].y - snake[0].y) === GRID_SIZE;
   if (xPositionIsGridLengthApart || yPositionIsGridLengthApart) {
     updateSnakePosition(lastPosition);
   }
@@ -233,12 +236,12 @@ const clearKeyBuffer = () => {
 
 const resetSnakePosition = () => {
   snake.length = 0;
-  snakeHead.x = gridSize * 3;
-  snakeHead.y = gridSize * 10;
+  snakeHead.x = GRID_SIZE * 3;
+  snakeHead.y = GRID_SIZE * 10;
   snake[0] = snakeHead;
-  snake[1] = { x: gridSize * 2, y: gridSize * 10 };
-  snake[2] = { x: gridSize, y: gridSize * 10 };
-  snake[3] = { x: gridSize, y: gridSize * 10 };
+  snake[1] = { x: GRID_SIZE * 2, y: GRID_SIZE * 10 };
+  snake[2] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
+  snake[3] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
 };
 
 const resetCollision = () => {
