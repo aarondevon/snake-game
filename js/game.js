@@ -257,7 +257,8 @@ const gameLoop = () => {
   // Draw game board
   CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
 
-  if (keyBuffer.length > 0) {
+  const snakeMoving = keyBuffer.length > 0;
+  if (snakeMoving) {
     moveSnake();
     // see if snake is eating an apple
     isSnakeOnApple();
