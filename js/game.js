@@ -70,7 +70,9 @@ const draw = () => {
   CanvasRender.drawSnake(snake, GRID_SIZE);
 
   // Game Over screen
-  CanvasRender.drawGameOverScreen(score);
+  if (collision) {
+    CanvasRender.drawGameOverScreen(score);
+  }
 };
 
 const getLastPosition = () => snake.map((position) => ({ x: position.x, y: position.y }));

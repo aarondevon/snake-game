@@ -42,17 +42,15 @@ const CanvasRender = (function () {
   };
 
   const drawGameOverScreen = (score) => {
-    if (collision) {
-      colorRectangle(60, 0, 480, canvas.height, 'rgba(23, 38, 1, 0.9)');
-      canvasContext.font = '72px Hanalei';
-      canvasContext.fillStyle = '#85A60F';
-      canvasContext.fillText('Game Over', 130, 150);
-      canvasContext.fillText(`Score: ${score}`, 130, 225);
+    colorRectangle(60, 0, 480, canvas.height, 'rgba(23, 38, 1, 0.9)');
+    canvasContext.font = '72px Hanalei';
+    canvasContext.fillStyle = '#85A60F';
+    canvasContext.fillText('Game Over', 130, 150);
+    canvasContext.fillText(`Score: ${score}`, 130, 225);
 
-      canvasContext.font = '48px Hanalei';
-      canvasContext.fillText('Press Spacebar', 130, 300);
-      canvasContext.fillText('to play again', 145, 350);
-    }
+    canvasContext.font = '48px Hanalei';
+    canvasContext.fillText('Press Spacebar', 130, 300);
+    canvasContext.fillText('to play again', 145, 350);
   };
 
   return {
