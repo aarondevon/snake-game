@@ -68,16 +68,16 @@ const updateDirection = () => {
   }
 };
 
-const snakeBodySetLastPosition = (lastPosition) => {
-  for (let i = 0; i < snake.length; i++) {
-    if (i === 0) {
-      snake[0].x = lastPosition[i].x;
-      snake[0].y = lastPosition[i].y;
-    } else {
-      snake[i] = lastPosition[i];
-    }
-  }
-};
+// const snakeBodySetLastPosition = (lastPosition) => {
+//   for (let i = 0; i < snake.length; i++) {
+//     if (i === 0) {
+//       snake[0].x = lastPosition[i].x;
+//       snake[0].y = lastPosition[i].y;
+//     } else {
+//       snake[i] = lastPosition[i];
+//     }
+//   }
+// };
 
 const snakeMoveLeft = () => {
   snake[0].x -= MOVEMENT;
@@ -162,18 +162,18 @@ const isSnakeOnApple = () => {
   }
 };
 
-const snakeSideCollision = (lastPosition) => {
+const snakeSideCollision = () => {
   if (snake[0].x < 0 || snake[0].x > canvas.width - 20 || snake[0].y < 0 || snake[0].y > canvas.height - 20) {
     collision = true;
-    snakeBodySetLastPosition(lastPosition);
+    // snakeBodySetLastPosition(lastPosition);
   }
 };
 
-const snakeOnSnakeCollision = (lastPosition) => {
+const snakeOnSnakeCollision = () => {
   for (let i = 1; i < snake.length; i++) {
     if (JSON.stringify(snake[i]) === JSON.stringify(snake[0])) {
       collision = true;
-      snakeBodySetLastPosition(lastPosition);
+      // snakeBodySetLastPosition(lastPosition);
     }
   }
 };
@@ -294,10 +294,10 @@ setInterval(() => {
       isSnakeOnApple();
 
       // Check to see if snake hit the sides of the board
-      snakeSideCollision(lastPosition);
+      snakeSideCollision();
 
       // Check to see if snake hits itself
-      snakeOnSnakeCollision(lastPosition);
+      snakeOnSnakeCollision();
     }
     // Draw game board
     CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
