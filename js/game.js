@@ -12,7 +12,6 @@ const FRAMES_PER_SECOND = 140;
 
 let gameIntervalId = null;
 let score = 0;
-let collision = false;
 
 const keyBuffer = [];
 
@@ -212,16 +211,11 @@ const resetSnakePosition = () => {
   snake.body[3] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
 };
 
-const resetCollision = () => {
-  collision = false;
-};
-
 const resetGame = () => {
   resetScore();
   resetScoreCounter();
   clearKeyBuffer();
   resetSnakePosition();
-  resetCollision();
   gameIntervalId = setInterval(gameLoop, 1000 / FRAMES_PER_SECOND);
 };
 
@@ -285,16 +279,13 @@ const setDirection = (validDirection, key) => {
 };
 
 document.addEventListener('keydown', (event) => {
-  if (gameIntervalId === null && event.key === ' ') {
+  const { key } = event;
+  if (gameIntervalId === null && key === ' ') {
     resetGame();
   }
 
-  if (allowedKeys.includes(event.key)) {
-    const { key } = event;
-
-    if (collision === false) {
-      setDirection(isValidDirection(key), key);
-    }
+  if (allowedKeys.includes(key)) {
+    setDirection(isValidDirection(key), key);
   }
 });
 
