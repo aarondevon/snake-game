@@ -248,6 +248,8 @@ const isValidDirection = (key) => {
 const gameOver = () => {
   clearInterval(gameIntervalId);
   gameIntervalId = null;
+  // Game Over screen
+  CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
   updateHighScore();
 };
 
@@ -264,9 +266,7 @@ const gameLoop = () => {
       // Check to see if snake hit the sides of the board
       // or if snake hit itself
       if (isSnakeCollidingWithWall() === true || isSnakeCollidingWithSelf() === true) {
-        // Game Over screen
         gameOver();
-        CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
         return;
       }
     }
