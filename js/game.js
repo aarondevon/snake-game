@@ -97,7 +97,7 @@ const snakeMoveDown = () => {
   snake.body[0].y += MOVEMENT;
 };
 
-const moveSnake = () => {
+const getSnakeDirection = () => {
   // eslint-disable-next-line default-case
   switch (keyBuffer[0]) {
     case 'ArrowLeft':
@@ -153,6 +153,22 @@ const moveBody = (lastPosition) => {
   if (xPositionIsGridLengthApart || yPositionIsGridLengthApart) {
     updateSnakePosition(lastPosition);
   }
+};
+
+const moveSnake = () => {
+  // array of last positions
+  const lastPosition = getLastPosition();
+
+  setKeyBufferLength();
+  // Move snake within the grid
+  if (snake.body[0].x % 20 === 0 && snake.body[0].y % 20 === 0) {
+    // moveSnake();
+    updateDirection();
+  }
+
+  moveBody(lastPosition);
+  getNewTailPosition();
+  getSnakeDirection();
 };
 
 const isSnakeOnApple = () => {
@@ -241,20 +257,7 @@ const gameLoop = () => {
 
   if (collision === false) {
     if (keyBuffer.length > 0) {
-      // array of last positions
-      const lastPosition = getLastPosition();
-
-      setKeyBufferLength();
-      // Move snake within the grid
-      if (snake.body[0].x % 20 === 0 && snake.body[0].y % 20 === 0) {
-        // moveSnake();
-        updateDirection();
-      }
-
-      moveBody(lastPosition);
-      getNewTailPosition();
       moveSnake();
-
       // see if snake is eating an apple
       isSnakeOnApple();
 
