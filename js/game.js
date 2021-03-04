@@ -1,5 +1,7 @@
 const scoreCount = document.querySelector('#current-score-count');
 const highScoreCount = document.querySelector('#high-score-count');
+const canvas = document.querySelector('#canvas');
+const canvasContext = canvas.getContext('2d');
 
 const GRID_SIZE = 20;
 const COLS = 30;
@@ -7,21 +9,15 @@ const ROWS = 24;
 const MOVEMENT = 1;
 
 let score = 0;
-let canvas;
-let canvasContext;
-
 let collision = false;
-const keyBuffer = [];
 
-const snakeHead = {
-  x: GRID_SIZE * 3,
-  y: GRID_SIZE * 10,
-};
+const keyBuffer = [];
 
 const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'];
 
 // Initial starting snake
-const snake = [snakeHead,
+const snake = [
+  { x: GRID_SIZE * 3, y: GRID_SIZE * 10 },
   { x: GRID_SIZE * 2, y: GRID_SIZE * 10 },
   { x: GRID_SIZE, y: GRID_SIZE * 10 },
   { x: GRID_SIZE, y: GRID_SIZE * 10 },
@@ -61,17 +57,17 @@ const randomApplePosition = () => {
 // Draw all elements
 const draw = () => {
   // Draw game board
-  CanvasRender.colorBoard(GRID_SIZE, ROWS, COLS);
+  CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
 
   // Apple
-  CanvasRender.drawApple((appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9E170F');
+  CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
 
   // Snake
-  CanvasRender.drawSnake(snake, GRID_SIZE);
+  CanvasRender.drawSnake(canvasContext, snake, GRID_SIZE);
 
   // Game Over screen
   if (collision) {
-    CanvasRender.drawGameOverScreen(score);
+    CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
   }
 };
 
@@ -92,8 +88,8 @@ const updateDirection = () => {
 const snakeBodySetLastPosition = (lastPosition) => {
   for (let i = 0; i < snake.length; i++) {
     if (i === 0) {
-      snakeHead.x = lastPosition[i].x;
-      snakeHead.y = lastPosition[i].y;
+      snake[0].x = lastPosition[i].x;
+      snake[0].y = lastPosition[i].y;
     } else {
       snake[i] = lastPosition[i];
     }
@@ -101,19 +97,19 @@ const snakeBodySetLastPosition = (lastPosition) => {
 };
 
 const snakeMoveLeft = () => {
-  snakeHead.x -= MOVEMENT;
+  snake[0].x -= MOVEMENT;
 };
 
 const snakeMoveRight = () => {
-  snakeHead.x += MOVEMENT;
+  snake[0].x += MOVEMENT;
 };
 
 const snakeMoveUp = () => {
-  snakeHead.y -= MOVEMENT;
+  snake[0].y -= MOVEMENT;
 };
 
 const snakeMoveDown = () => {
-  snakeHead.y += MOVEMENT;
+  snake[0].y += MOVEMENT;
 };
 
 const moveSnake = () => {
@@ -175,7 +171,7 @@ const moveBody = (lastPosition) => {
 };
 
 const isSnakeOnApple = () => {
-  if (snakeHead.x === appleLocation.x && snakeHead.y === appleLocation.y) {
+  if (snake[0].x === appleLocation.x && snake[0].y === appleLocation.y) {
     snake.push({ x: snake[snake.length - 1].x, y: snake[snake.length - 1].y });
     score += 1;
     randomApplePosition();
@@ -184,7 +180,7 @@ const isSnakeOnApple = () => {
 };
 
 const snakeSideCollision = (lastPosition) => {
-  if (snakeHead.x < 0 || snakeHead.x > canvas.width - 20 || snakeHead.y < 0 || snakeHead.y > canvas.height - 20) {
+  if (snake[0].x < 0 || snake[0].x > canvas.width - 20 || snake[0].y < 0 || snake[0].y > canvas.height - 20) {
     collision = true;
     snakeBodySetLastPosition(lastPosition);
   }
@@ -192,7 +188,7 @@ const snakeSideCollision = (lastPosition) => {
 
 const snakeOnSnakeCollision = (lastPosition) => {
   for (let i = 1; i < snake.length; i++) {
-    if (JSON.stringify(snake[i]) === JSON.stringify(snakeHead)) {
+    if (JSON.stringify(snake[i]) === JSON.stringify(snake[0])) {
       collision = true;
       snakeBodySetLastPosition(lastPosition);
     }
@@ -205,7 +201,7 @@ const move = () => {
 
   setKeyBufferLength();
   // Move snake within the grid
-  if (snakeHead.x % 20 === 0 && snakeHead.y % 20 === 0) {
+  if (snake[0].x % 20 === 0 && snake[0].y % 20 === 0) {
     // moveSnake();
     updateDirection();
   }
@@ -238,9 +234,7 @@ const clearKeyBuffer = () => {
 
 const resetSnakePosition = () => {
   snake.length = 0;
-  snakeHead.x = GRID_SIZE * 3;
-  snakeHead.y = GRID_SIZE * 10;
-  snake[0] = snakeHead;
+  snake[0] = { x: GRID_SIZE * 3, y: GRID_SIZE * 10 };
   snake[1] = { x: GRID_SIZE * 2, y: GRID_SIZE * 10 };
   snake[2] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
   snake[3] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
@@ -312,28 +306,24 @@ const executeMove = () => {
   }
 };
 
-window.onload = function () {
-  canvas = document.querySelector('#canvas');
-  canvasContext = canvas.getContext('2d');
-  if (localStorage.getItem('highScore') === null) {
-    localStorage.setItem('highScore', '0');
-  } else {
-    highScoreCount.innerText = localStorage.getItem('highScore');
+if (localStorage.getItem('highScore') === null) {
+  localStorage.setItem('highScore', '0');
+} else {
+  highScoreCount.innerText = localStorage.getItem('highScore');
+}
+
+const framesPerSecond = 140;
+
+// Set apple location
+randomApplePosition();
+
+setInterval(() => {
+  if (collision === true) {
+    updateHighScore();
   }
 
-  const framesPerSecond = 140;
-
-  // Set apple location
-  randomApplePosition();
-
-  setInterval(() => {
-    if (collision === true) {
-      updateHighScore();
-    }
-
-    if (collision === false) {
-      executeMove();
-      draw();
-    }
-  }, 1000 / framesPerSecond);
-};
+  if (collision === false) {
+    executeMove();
+    draw();
+  }
+}, 1000 / framesPerSecond);

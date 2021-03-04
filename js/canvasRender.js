@@ -1,11 +1,13 @@
 // eslint-disable-next-line
 const CanvasRender = (function () {
-  const colorRectangle = (leftX, topY, width, height, color) => {
+  const colorRectangle = (canvasContext, leftX, topY, width, height, color) => {
+    // eslint-disable-next-line no-param-reassign
     canvasContext.fillStyle = color;
     canvasContext.fillRect(leftX, topY, width, height);
   };
 
-  const colorCircle = (centerX, centerY, radius, drawColor) => {
+  const colorCircle = (canvasContext, centerX, centerY, radius, drawColor) => {
+    // eslint-disable-next-line no-param-reassign
     canvasContext.fillStyle = drawColor;
     canvasContext.beginPath();
     // X (Center of circle), Y, Radius, Angle, Radian, top or bottom of circle
@@ -13,41 +15,43 @@ const CanvasRender = (function () {
     canvasContext.fill();
   };
 
-  const colorBoard = (gridSize, rows, cols) => {
+  const colorBoard = (canvasContext, gridSize, rows, cols) => {
     const lightGreen = '#365902';
     const mediumGreen = '#172601';
 
     for (let j = 0; j < rows; j++) {
       for (let i = 0; i < cols; i++) {
         if ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) {
-          colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, lightGreen);
+          colorRectangle(canvasContext, i * gridSize, j * gridSize, gridSize, gridSize, lightGreen);
         } else {
-          colorRectangle(i * gridSize, j * gridSize, gridSize, gridSize, mediumGreen);
+          colorRectangle(canvasContext, i * gridSize, j * gridSize, gridSize, gridSize, mediumGreen);
         }
       }
     }
   };
 
-  const drawApple = (centerX, centerY, radius, drawColor) => {
-    colorCircle(centerX, centerY, radius, drawColor);
+  const drawApple = (canvasContext, centerX, centerY, radius, drawColor) => {
+    colorCircle(canvasContext, centerX, centerY, radius, drawColor);
   };
 
-  const drawSnake = (snake, gridSize) => {
+  const drawSnake = (canvasContext, snake, gridSize) => {
     snake.forEach((section, index) => {
-      colorCircle((section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
+      colorCircle(canvasContext, (section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
       if (index === snake.length - 1) {
-        colorCircle((snake[0].x + 10), (snake[0].y + 10), (gridSize / 2), '#D9863D');
+        colorCircle(canvasContext, (snake[0].x + 10), (snake[0].y + 10), (gridSize / 2), '#D9863D');
       }
     });
   };
 
-  const drawGameOverScreen = (score) => {
-    colorRectangle(60, 0, 480, canvas.height, 'rgba(23, 38, 1, 0.9)');
+  const drawGameOverScreen = (canvas, canvasContext, score) => {
+    colorRectangle(canvasContext, 60, 0, 480, canvas.height, 'rgba(23, 38, 1, 0.9)');
+    // eslint-disable-next-line no-param-reassign
     canvasContext.font = '72px Hanalei';
+    // eslint-disable-next-line no-param-reassign
     canvasContext.fillStyle = '#85A60F';
     canvasContext.fillText('Game Over', 130, 150);
     canvasContext.fillText(`Score: ${score}`, 130, 225);
-
+    // eslint-disable-next-line no-param-reassign
     canvasContext.font = '48px Hanalei';
     canvasContext.fillText('Press Spacebar', 130, 300);
     canvasContext.fillText('to play again', 145, 350);
