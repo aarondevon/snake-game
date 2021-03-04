@@ -178,31 +178,6 @@ const snakeOnSnakeCollision = (lastPosition) => {
   }
 };
 
-const move = () => {
-  // array of last positions
-  const lastPosition = getLastPosition();
-
-  setKeyBufferLength();
-  // Move snake within the grid
-  if (snake[0].x % 20 === 0 && snake[0].y % 20 === 0) {
-    // moveSnake();
-    updateDirection();
-  }
-
-  moveBody(lastPosition);
-  getNewTailPosition();
-  moveSnake();
-
-  // see if snake is eating an apple
-  isSnakeOnApple();
-
-  // Check to see if snake hit the sides of the board
-  snakeSideCollision(lastPosition);
-
-  // Check to see if snake hits itself
-  snakeOnSnakeCollision(lastPosition);
-};
-
 const resetScore = () => {
   score = 0;
 };
@@ -283,12 +258,6 @@ const updateHighScore = () => {
   }
 };
 
-const executeMove = () => {
-  if (keyBuffer.length > 0) {
-    move();
-  }
-};
-
 if (localStorage.getItem('highScore') === null) {
   localStorage.setItem('highScore', '0');
 } else {
@@ -306,7 +275,30 @@ setInterval(() => {
   }
 
   if (collision === false) {
-    executeMove();
+    if (keyBuffer.length > 0) {
+      // array of last positions
+      const lastPosition = getLastPosition();
+
+      setKeyBufferLength();
+      // Move snake within the grid
+      if (snake[0].x % 20 === 0 && snake[0].y % 20 === 0) {
+        // moveSnake();
+        updateDirection();
+      }
+
+      moveBody(lastPosition);
+      getNewTailPosition();
+      moveSnake();
+
+      // see if snake is eating an apple
+      isSnakeOnApple();
+
+      // Check to see if snake hit the sides of the board
+      snakeSideCollision(lastPosition);
+
+      // Check to see if snake hits itself
+      snakeOnSnakeCollision(lastPosition);
+    }
     // Draw game board
     CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
 
