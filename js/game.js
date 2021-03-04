@@ -19,6 +19,7 @@ const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'];
 
 // Initial starting snake
 const snake = {
+  snakeMovmentBuffer: [],
   body: [
     { x: GRID_SIZE * 3, y: GRID_SIZE * 10 },
     { x: GRID_SIZE * 2, y: GRID_SIZE * 10 },
@@ -69,14 +70,14 @@ const randomApplePosition = () => {
 const getLastPosition = () => snake.body.map((position) => ({ x: position.x, y: position.y }));
 
 const setKeyBufferLength = () => {
-  if (keyBuffer.length > 2) {
-    keyBuffer.length = 2;
+  if (snake.snakeMovmentBuffer.length > 2) {
+    snake.snakeMovmentBuffer.length = 2;
   }
 };
 
 const updateDirection = () => {
-  if (keyBuffer.length > 1) {
-    keyBuffer.shift();
+  if (snake.snakeMovmentBuffer.length > 1) {
+    snake.snakeMovmentBuffer.shift();
   }
 };
 
@@ -98,7 +99,7 @@ const snakeMoveDown = () => {
 
 const getSnakeDirection = () => {
   // eslint-disable-next-line default-case
-  switch (keyBuffer[0]) {
+  switch (snake.snakeMovmentBuffer[0]) {
     case 'ArrowLeft':
       snakeMoveLeft();
       break;
@@ -195,7 +196,7 @@ const resetScoreCounter = () => {
 };
 
 const clearKeyBuffer = () => {
-  keyBuffer.length = 0;
+  snake.snakeMovmentBuffer.length = 0;
 };
 
 const resetSnakePosition = () => {
@@ -215,19 +216,19 @@ const resetGame = () => {
 };
 
 const isValidDirection = (key) => {
-  if (keyBuffer.length === 0 && key === 'ArrowLeft') {
+  if (snake.snakeMovmentBuffer.length === 0 && key === 'ArrowLeft') {
     return false;
   }
 
-  if (keyBuffer[0] === key) {
+  if (snake.snakeMovmentBuffer[0] === key) {
     return false;
   }
 
-  if ((keyBuffer[0] === 'ArrowLeft' && key === 'ArrowRight') || (keyBuffer[0] === 'ArrowRight' && key === 'ArrowLeft')) {
+  if ((snake.snakeMovmentBuffer[0] === 'ArrowLeft' && key === 'ArrowRight') || (snake.snakeMovmentBuffer[0] === 'ArrowRight' && key === 'ArrowLeft')) {
     return false;
   }
 
-  if ((keyBuffer[0] === 'ArrowDown' && key === 'ArrowUp') || (keyBuffer[0] === 'ArrowUp' && key === 'ArrowDown')) {
+  if ((snake.snakeMovmentBuffer[0] === 'ArrowDown' && key === 'ArrowUp') || (snake.snakeMovmentBuffer[0] === 'ArrowUp' && key === 'ArrowDown')) {
     return false;
   }
 
@@ -246,7 +247,7 @@ const gameLoop = () => {
   // Draw game board
   CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
 
-  const snakeMoving = keyBuffer.length > 0;
+  const snakeMoving = snake.snakeMovmentBuffer.length > 0;
   if (snakeMoving) {
     moveSnake();
     // see if snake is eating an apple
@@ -269,7 +270,7 @@ const gameLoop = () => {
 
 const setDirection = (validDirection, key) => {
   if (validDirection === true) {
-    keyBuffer.push(key);
+    snake.snakeMovmentBuffer.push(key);
   }
 };
 
