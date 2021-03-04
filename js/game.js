@@ -9,6 +9,7 @@ const ROWS = 24;
 const MOVEMENT = 1;
 const FRAMES_PER_SECOND = 140;
 
+let gameIntervalId = null;
 let score = 0;
 let collision = false;
 
@@ -78,17 +79,6 @@ const updateDirection = () => {
     keyBuffer.shift();
   }
 };
-
-// const snakeBodySetLastPosition = (lastPosition) => {
-//   for (let i = 0; i < snake.body.length; i++) {
-//     if (i === 0) {
-//       snake.body[0].x = lastPosition[i].x;
-//       snake.body[0].y = lastPosition[i].y;
-//     } else {
-//       snake.body[i] = lastPosition[i];
-//     }
-//   }
-// };
 
 const snakeMoveLeft = () => {
   snake.body[0].x -= MOVEMENT;
@@ -173,18 +163,16 @@ const isSnakeOnApple = () => {
   }
 };
 
-const snakeSideCollision = () => {
+const isSnakeCollidingWithWall = () => {
   if (snake.body[0].x < 0 || snake.body[0].x > canvas.width - 20 || snake.body[0].y < 0 || snake.body[0].y > canvas.height - 20) {
     collision = true;
-    // snakeBodySetLastPosition(lastPosition);
   }
 };
 
-const snakeOnSnakeCollision = () => {
+const isSnakeCollidingWithSelf = () => {
   for (let i = 1; i < snake.body.length; i++) {
     if (JSON.stringify(snake.body[i]) === JSON.stringify(snake.body[0])) {
       collision = true;
-      // snakeBodySetLastPosition(lastPosition);
     }
   }
 };
@@ -269,10 +257,12 @@ const gameLoop = () => {
       isSnakeOnApple();
 
       // Check to see if snake hit the sides of the board
-      snakeSideCollision();
-
-      // Check to see if snake hits itself
-      snakeOnSnakeCollision();
+      // or if snake hit itself
+      if (isSnakeCollidingWithWall() === true || isSnakeCollidingWithSelf() === true) {
+        // Game Over screen
+        CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
+        return;
+      }
     }
 
     // Apple
@@ -280,13 +270,8 @@ const gameLoop = () => {
 
     // Snake
     CanvasRender.drawSnake(canvasContext, snake.body, GRID_SIZE);
-
-    // Game Over screen
-    if (collision) {
-      CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
-    }
   }
-}
+};
 
 const setDirection = (validDirection, key) => {
   if (validDirection === true) {
@@ -317,4 +302,4 @@ if (localStorage.getItem('highScore') === null) {
 // Set apple location
 randomApplePosition();
 
-setInterval(gameLoop, 1000 / FRAMES_PER_SECOND);
+gameIntervalId = setInterval(gameLoop, 1000 / FRAMES_PER_SECOND);
