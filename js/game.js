@@ -25,6 +25,14 @@ const snake = {
   ],
 };
 
+const updateHighScore = () => {
+  const highScore = parseInt(localStorage.getItem('highScore'), 10);
+  if (score > highScore) {
+    localStorage.setItem('highScore', score);
+    highScoreCount.innerText = score;
+  }
+};
+
 const generateCoordinate = (range) => {
   let isReady = false;
   let number;
@@ -251,14 +259,6 @@ document.addEventListener('keydown', (event) => {
     }
   }
 });
-
-const updateHighScore = () => {
-  const highScore = parseInt(localStorage.getItem('highScore'), 10);
-  if (score > highScore) {
-    localStorage.setItem('highScore', score);
-    highScoreCount.innerText = score;
-  }
-};
 
 if (localStorage.getItem('highScore') === null) {
   localStorage.setItem('highScore', '0');
