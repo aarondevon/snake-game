@@ -7,6 +7,7 @@ const GRID_SIZE = 20;
 const COLS = 30;
 const ROWS = 24;
 const MOVEMENT = 1;
+const FRAMES_PER_SECOND = 140;
 
 let score = 0;
 let collision = false;
@@ -266,8 +267,6 @@ if (localStorage.getItem('highScore') === null) {
   highScoreCount.innerText = localStorage.getItem('highScore');
 }
 
-const framesPerSecond = 140;
-
 // Set apple location
 randomApplePosition();
 
@@ -315,4 +314,4 @@ setInterval(() => {
       CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
     }
   }
-}, 1000 / framesPerSecond);
+}, 1000 / FRAMES_PER_SECOND);
