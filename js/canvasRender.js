@@ -34,11 +34,11 @@ const CanvasRender = (function () {
     colorCircle(canvasContext, centerX, centerY, radius, drawColor);
   };
 
-  const drawSnake = (canvasContext, snake, gridSize) => {
-    snake.forEach((section, index) => {
+  const drawSnake = (canvasContext, snakeBody, gridSize) => {
+    snakeBody.forEach((section, index) => {
       colorCircle(canvasContext, (section.x + 10), (section.y + 10), (gridSize / 2), '#C1D911');
-      if (index === snake.length - 1) {
-        colorCircle(canvasContext, (snake[0].x + 10), (snake[0].y + 10), (gridSize / 2), '#D9863D');
+      if (index === snakeBody.length - 1) {
+        colorCircle(canvasContext, (snakeBody[0].x + 10), (snakeBody[0].y + 10), (gridSize / 2), '#D9863D');
       }
     });
   };

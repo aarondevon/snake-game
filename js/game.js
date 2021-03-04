@@ -16,12 +16,14 @@ const keyBuffer = [];
 const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'];
 
 // Initial starting snake
-const snake = [
-  { x: GRID_SIZE * 3, y: GRID_SIZE * 10 },
-  { x: GRID_SIZE * 2, y: GRID_SIZE * 10 },
-  { x: GRID_SIZE, y: GRID_SIZE * 10 },
-  { x: GRID_SIZE, y: GRID_SIZE * 10 },
-];
+const snake = {
+  body: [
+    { x: GRID_SIZE * 3, y: GRID_SIZE * 10 },
+    { x: GRID_SIZE * 2, y: GRID_SIZE * 10 },
+    { x: GRID_SIZE, y: GRID_SIZE * 10 },
+    { x: GRID_SIZE, y: GRID_SIZE * 10 },
+  ],
+};
 
 const generateCoordinate = (range) => {
   let isReady = false;
@@ -43,8 +45,8 @@ const randomApplePosition = () => {
   do {
     appleLocation.x = generateCoordinate(canvas.width - GRID_SIZE);
     appleLocation.y = generateCoordinate(canvas.height - GRID_SIZE);
-    for (let i = 0; i < snake.length; i += 1) {
-      if (!(JSON.stringify(snake[i]) === JSON.stringify(appleLocation))) {
+    for (let i = 0; i < snake.body.length; i += 1) {
+      if (!(JSON.stringify(snake.body[i]) === JSON.stringify(appleLocation))) {
         isReady = true;
       } else {
         isReady = false;
@@ -54,7 +56,7 @@ const randomApplePosition = () => {
   } while (isReady === false);
 };
 
-const getLastPosition = () => snake.map((position) => ({ x: position.x, y: position.y }));
+const getLastPosition = () => snake.body.map((position) => ({ x: position.x, y: position.y }));
 
 const setKeyBufferLength = () => {
   if (keyBuffer.length > 2) {
@@ -69,30 +71,30 @@ const updateDirection = () => {
 };
 
 // const snakeBodySetLastPosition = (lastPosition) => {
-//   for (let i = 0; i < snake.length; i++) {
+//   for (let i = 0; i < snake.body.length; i++) {
 //     if (i === 0) {
-//       snake[0].x = lastPosition[i].x;
-//       snake[0].y = lastPosition[i].y;
+//       snake.body[0].x = lastPosition[i].x;
+//       snake.body[0].y = lastPosition[i].y;
 //     } else {
-//       snake[i] = lastPosition[i];
+//       snake.body[i] = lastPosition[i];
 //     }
 //   }
 // };
 
 const snakeMoveLeft = () => {
-  snake[0].x -= MOVEMENT;
+  snake.body[0].x -= MOVEMENT;
 };
 
 const snakeMoveRight = () => {
-  snake[0].x += MOVEMENT;
+  snake.body[0].x += MOVEMENT;
 };
 
 const snakeMoveUp = () => {
-  snake[0].y -= MOVEMENT;
+  snake.body[0].y -= MOVEMENT;
 };
 
 const snakeMoveDown = () => {
-  snake[0].y += MOVEMENT;
+  snake.body[0].y += MOVEMENT;
 };
 
 const moveSnake = () => {
@@ -118,14 +120,14 @@ const moveSnake = () => {
 };
 
 const updateSnakePosition = (lastPosition) => {
-  for (let i = snake.length - 1; i > 0; i--) {
-    snake[i] = lastPosition[i - 1];
+  for (let i = snake.body.length - 1; i > 0; i--) {
+    snake.body[i] = lastPosition[i - 1];
   }
 };
 
 const getNewTailPosition = () => {
-  const snakeTail = snake[snake.length - 1];
-  const snakeTailParent = snake[snake.length - 2];
+  const snakeTail = snake.body[snake.body.length - 1];
+  const snakeTailParent = snake.body[snake.body.length - 2];
   if (
     snakeTail.x === snakeTailParent.x
     && snakeTail.y === snakeTailParent.y
@@ -145,17 +147,17 @@ const getNewTailPosition = () => {
 
 const moveBody = (lastPosition) => {
   const xPositionIsGridLengthApart =
-    Math.abs(snake[1].x - snake[0].x) === GRID_SIZE;
+    Math.abs(snake.body[1].x - snake.body[0].x) === GRID_SIZE;
   const yPositionIsGridLengthApart =
-    Math.abs(snake[1].y - snake[0].y) === GRID_SIZE;
+    Math.abs(snake.body[1].y - snake.body[0].y) === GRID_SIZE;
   if (xPositionIsGridLengthApart || yPositionIsGridLengthApart) {
     updateSnakePosition(lastPosition);
   }
 };
 
 const isSnakeOnApple = () => {
-  if (snake[0].x === appleLocation.x && snake[0].y === appleLocation.y) {
-    snake.push({ x: snake[snake.length - 1].x, y: snake[snake.length - 1].y });
+  if (snake.body[0].x === appleLocation.x && snake.body[0].y === appleLocation.y) {
+    snake.body.push({ x: snake.body[snake.body.length - 1].x, y: snake.body[snake.body.length - 1].y });
     score += 1;
     randomApplePosition();
     scoreCount.innerText = score;
@@ -163,15 +165,15 @@ const isSnakeOnApple = () => {
 };
 
 const snakeSideCollision = () => {
-  if (snake[0].x < 0 || snake[0].x > canvas.width - 20 || snake[0].y < 0 || snake[0].y > canvas.height - 20) {
+  if (snake.body[0].x < 0 || snake.body[0].x > canvas.width - 20 || snake.body[0].y < 0 || snake.body[0].y > canvas.height - 20) {
     collision = true;
     // snakeBodySetLastPosition(lastPosition);
   }
 };
 
 const snakeOnSnakeCollision = () => {
-  for (let i = 1; i < snake.length; i++) {
-    if (JSON.stringify(snake[i]) === JSON.stringify(snake[0])) {
+  for (let i = 1; i < snake.body.length; i++) {
+    if (JSON.stringify(snake.body[i]) === JSON.stringify(snake.body[0])) {
       collision = true;
       // snakeBodySetLastPosition(lastPosition);
     }
@@ -191,11 +193,11 @@ const clearKeyBuffer = () => {
 };
 
 const resetSnakePosition = () => {
-  snake.length = 0;
-  snake[0] = { x: GRID_SIZE * 3, y: GRID_SIZE * 10 };
-  snake[1] = { x: GRID_SIZE * 2, y: GRID_SIZE * 10 };
-  snake[2] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
-  snake[3] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
+  snake.body.length = 0;
+  snake.body[0] = { x: GRID_SIZE * 3, y: GRID_SIZE * 10 };
+  snake.body[1] = { x: GRID_SIZE * 2, y: GRID_SIZE * 10 };
+  snake.body[2] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
+  snake.body[3] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
 };
 
 const resetCollision = () => {
@@ -281,7 +283,7 @@ setInterval(() => {
 
       setKeyBufferLength();
       // Move snake within the grid
-      if (snake[0].x % 20 === 0 && snake[0].y % 20 === 0) {
+      if (snake.body[0].x % 20 === 0 && snake.body[0].y % 20 === 0) {
         // moveSnake();
         updateDirection();
       }
@@ -306,7 +308,7 @@ setInterval(() => {
     CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
 
     // Snake
-    CanvasRender.drawSnake(canvasContext, snake, GRID_SIZE);
+    CanvasRender.drawSnake(canvasContext, snake.body, GRID_SIZE);
 
     // Game Over screen
     if (collision) {
