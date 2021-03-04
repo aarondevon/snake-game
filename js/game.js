@@ -10,21 +10,12 @@ const ROWS = 24;
 const MOVEMENT = 1;
 const FRAMES_PER_SECOND = 140;
 
+const appleLocation = {};
+
 let gameIntervalId = null;
 let score = 0;
 
 const allowedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'];
-
-// Initial starting snake
-const snake = {
-  snakeMovementBuffer: [],
-  body: [
-    { x: GRID_SIZE * 3, y: GRID_SIZE * 10 },
-    { x: GRID_SIZE * 2, y: GRID_SIZE * 10 },
-    { x: GRID_SIZE, y: GRID_SIZE * 10 },
-    { x: GRID_SIZE, y: GRID_SIZE * 10 },
-  ],
-};
 
 const updateHighScore = () => {
   const highScore = parseInt(localStorage.getItem('highScore'), 10);
@@ -46,104 +37,19 @@ const generateCoordinate = (range) => {
   return number;
 };
 
-const appleLocation = {};
-
-const getLastPosition = () => snake.body.map((position) => ({ x: position.x, y: position.y }));
-
-const setKeyBufferLength = () => {
-  if (snake.snakeMovementBuffer.length > 2) {
-    snake.snakeMovementBuffer.length = 2;
-  }
-};
-
-const updateDirection = () => {
-  if (snake.snakeMovementBuffer.length > 1) {
-    snake.snakeMovementBuffer.shift();
-  }
-};
-
-const snakeMovement = {
-  left() {
-    snake.body[0].x -= MOVEMENT;
-  },
-  right() {
-    snake.body[0].x += MOVEMENT;
-  },
-  up() {
-    snake.body[0].y -= MOVEMENT;
-  },
-  down() {
-    snake.body[0].y += MOVEMENT;
-  },
-};
-
-const getSnakeDirection = () => {
-  // eslint-disable-next-line default-case
-  switch (snake.snakeMovementBuffer[0]) {
-    case 'ArrowLeft':
-      snakeMovement.left();
-      break;
-    case 'ArrowRight':
-      snakeMovement.right();
-      break;
-    case 'ArrowUp':
-      snakeMovement.up();
-      break;
-    case 'ArrowDown':
-      snakeMovement.down();
-      break;
-  }
-};
-
-const updateSnakePosition = (lastPosition) => {
-  for (let i = snake.body.length - 1; i > 0; i--) {
-    snake.body[i] = lastPosition[i - 1];
-  }
-};
-
-const getNewTailPosition = () => {
-  const snakeTail = snake.body[snake.body.length - 1];
-  const snakeTailParent = snake.body[snake.body.length - 2];
-  if (
-    snakeTail.x === snakeTailParent.x
-    && snakeTail.y === snakeTailParent.y
-  ) {
-    return snakeTail;
-  }
-
-  if (snakeTail.x === snakeTailParent.x) {
-    snakeTail.y += snakeTail.y < snakeTailParent.y ? 1 : -1;
-    return snakeTail;
-  }
-  if (snakeTail.y === snakeTailParent.y) {
-    snakeTail.x += snakeTail.x < snakeTailParent.x ? 1 : -1;
-    return snakeTail;
-  }
-};
-
-const moveBody = (lastPosition) => {
-  const xPositionIsGridLengthApart =
-    Math.abs(snake.body[1].x - snake.body[0].x) === GRID_SIZE;
-  const yPositionIsGridLengthApart =
-    Math.abs(snake.body[1].y - snake.body[0].y) === GRID_SIZE;
-  if (xPositionIsGridLengthApart || yPositionIsGridLengthApart) {
-    updateSnakePosition(lastPosition);
-  }
-};
-
 const moveSnake = () => {
   // array of last positions
-  const lastPosition = getLastPosition();
+  const lastPosition = Snake.getLastPosition();
 
-  setKeyBufferLength();
+  Snake.setKeyBufferLength();
   // Move snake within the grid
-  if (snake.body[0].x % 20 === 0 && snake.body[0].y % 20 === 0) {
-    updateDirection();
+  if (Snake.body[0].x % 20 === 0 && Snake.body[0].y % 20 === 0) {
+    Snake.updateDirection();
   }
 
-  moveBody(lastPosition);
-  getNewTailPosition();
-  getSnakeDirection();
+  Snake.moveBody(lastPosition);
+  Snake.getNewTailPosition();
+  Snake.getDirection();
 };
 
 // Generate a random position for the apple
@@ -152,8 +58,8 @@ const randomApplePosition = () => {
   do {
     appleLocation.x = generateCoordinate(canvas.width - GRID_SIZE);
     appleLocation.y = generateCoordinate(canvas.height - GRID_SIZE);
-    for (let i = 0; i < snake.body.length; i += 1) {
-      if (!(JSON.stringify(snake.body[i]) === JSON.stringify(appleLocation))) {
+    for (let i = 0; i < Snake.body.length; i += 1) {
+      if (!(JSON.stringify(Snake.body[i]) === JSON.stringify(appleLocation))) {
         isReady = true;
       } else {
         isReady = false;
@@ -164,8 +70,8 @@ const randomApplePosition = () => {
 };
 
 const isSnakeOnApple = () => {
-  if (snake.body[0].x === appleLocation.x && snake.body[0].y === appleLocation.y) {
-    snake.body.push({ x: snake.body[snake.body.length - 1].x, y: snake.body[snake.body.length - 1].y });
+  if (Snake.body[0].x === appleLocation.x && Snake.body[0].y === appleLocation.y) {
+    Snake.body.push({ x: Snake.body[Snake.body.length - 1].x, y: Snake.body[Snake.body.length - 1].y });
     score += 1;
     randomApplePosition();
     scoreCount.innerText = score;
@@ -173,12 +79,12 @@ const isSnakeOnApple = () => {
 };
 
 const isSnakeCollidingWithWall = () => {
-  return (snake.body[0].x < 0 || snake.body[0].x > canvas.width - 20 || snake.body[0].y < 0 || snake.body[0].y > canvas.height - 20);
+  return (Snake.body[0].x < 0 || Snake.body[0].x > canvas.width - 20 || Snake.body[0].y < 0 || Snake.body[0].y > canvas.height - 20);
 };
 
 const isSnakeCollidingWithSelf = () => {
-  for (let i = 1; i < snake.body.length; i++) {
-    if (JSON.stringify(snake.body[i]) === JSON.stringify(snake.body[0])) {
+  for (let i = 1; i < Snake.body.length; i++) {
+    if (JSON.stringify(Snake.body[i]) === JSON.stringify(Snake.body[0])) {
       return true;
     }
   }
@@ -196,7 +102,7 @@ const gameLoop = () => {
   // Draw game board
   CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
 
-  const snakeMoving = snake.snakeMovementBuffer.length > 0;
+  const snakeMoving = Snake.movementBuffer.length > 0;
   if (snakeMoving) {
     moveSnake();
     // see if snake is eating an apple
@@ -214,7 +120,7 @@ const gameLoop = () => {
   CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
 
   // Snake
-  CanvasRender.drawSnake(canvasContext, snake.body, GRID_SIZE);
+  CanvasRender.drawSnake(canvasContext, Snake.body, GRID_SIZE);
 };
 
 const resetScore = () => {
@@ -226,15 +132,15 @@ const resetScoreCounter = () => {
 };
 
 const clearKeyBuffer = () => {
-  snake.snakeMovementBuffer.length = 0;
+  Snake.movementBuffer.length = 0;
 };
 
 const resetSnakePosition = () => {
-  snake.body.length = 0;
-  snake.body[0] = { x: GRID_SIZE * 3, y: GRID_SIZE * 10 };
-  snake.body[1] = { x: GRID_SIZE * 2, y: GRID_SIZE * 10 };
-  snake.body[2] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
-  snake.body[3] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
+  Snake.body.length = 0;
+  Snake.body[0] = { x: GRID_SIZE * 3, y: GRID_SIZE * 10 };
+  Snake.body[1] = { x: GRID_SIZE * 2, y: GRID_SIZE * 10 };
+  Snake.body[2] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
+  Snake.body[3] = { x: GRID_SIZE, y: GRID_SIZE * 10 };
 };
 
 const resetGame = () => {
@@ -245,19 +151,19 @@ const resetGame = () => {
 };
 
 const isValidDirection = (key) => {
-  if (snake.snakeMovementBuffer.length === 0 && key === 'ArrowLeft') {
+  if (Snake.movementBuffer.length === 0 && key === 'ArrowLeft') {
     return false;
   }
 
-  if (snake.snakeMovementBuffer[0] === key) {
+  if (Snake.movementBuffer[0] === key) {
     return false;
   }
 
-  if ((snake.snakeMovementBuffer[0] === 'ArrowLeft' && key === 'ArrowRight') || (snake.snakeMovementBuffer[0] === 'ArrowRight' && key === 'ArrowLeft')) {
+  if ((Snake.MovementBuffer[0] === 'ArrowLeft' && key === 'ArrowRight') || (Snake.movementBuffer[0] === 'ArrowRight' && key === 'ArrowLeft')) {
     return false;
   }
 
-  if ((snake.snakeMovementBuffer[0] === 'ArrowDown' && key === 'ArrowUp') || (snake.snakeMovementBuffer[0] === 'ArrowUp' && key === 'ArrowDown')) {
+  if ((Snake.movementBuffer[0] === 'ArrowDown' && key === 'ArrowUp') || (Snake.movementBuffer[0] === 'ArrowUp' && key === 'ArrowDown')) {
     return false;
   }
 
@@ -266,7 +172,7 @@ const isValidDirection = (key) => {
 
 const setDirection = (validDirection, key) => {
   if (validDirection === true) {
-    snake.snakeMovementBuffer.push(key);
+    Snake.movementBuffer.push(key);
   }
 };
 
