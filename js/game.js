@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 const scoreCount = document.querySelector('#current-score-count');
 const highScoreCount = document.querySelector('#high-score-count');
 const canvas = document.querySelector('#canvas');
@@ -164,15 +165,13 @@ const isSnakeOnApple = () => {
 };
 
 const isSnakeCollidingWithWall = () => {
-  if (snake.body[0].x < 0 || snake.body[0].x > canvas.width - 20 || snake.body[0].y < 0 || snake.body[0].y > canvas.height - 20) {
-    collision = true;
-  }
+  return (snake.body[0].x < 0 || snake.body[0].x > canvas.width - 20 || snake.body[0].y < 0 || snake.body[0].y > canvas.height - 20);
 };
 
 const isSnakeCollidingWithSelf = () => {
   for (let i = 1; i < snake.body.length; i++) {
     if (JSON.stringify(snake.body[i]) === JSON.stringify(snake.body[0])) {
-      collision = true;
+      return true;
     }
   }
 };
@@ -207,6 +206,7 @@ const resetGame = () => {
   clearKeyBuffer();
   resetSnakePosition();
   resetCollision();
+  gameIntervalId = setInterval(gameLoop, 1000 / FRAMES_PER_SECOND);
 };
 
 const isValidDirection = (key) => {
@@ -229,13 +229,15 @@ const isValidDirection = (key) => {
   return true;
 };
 
+const gameOver = () => {
+  clearInterval(gameIntervalId);
+  gameIntervalId = null;
+  updateHighScore();
+};
+
 const gameLoop = () => {
   // Draw game board
   CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
-
-  if (collision === true) {
-    updateHighScore();
-  }
 
   if (collision === false) {
     if (keyBuffer.length > 0) {
@@ -260,6 +262,7 @@ const gameLoop = () => {
       // or if snake hit itself
       if (isSnakeCollidingWithWall() === true || isSnakeCollidingWithSelf() === true) {
         // Game Over screen
+        gameOver();
         CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
         return;
       }
@@ -280,7 +283,7 @@ const setDirection = (validDirection, key) => {
 };
 
 document.addEventListener('keydown', (event) => {
-  if (collision === true && event.key === ' ') {
+  if (gameIntervalId === null && event.key === ' ') {
     resetGame();
   }
 
