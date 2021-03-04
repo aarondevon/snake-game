@@ -257,26 +257,24 @@ const gameLoop = () => {
   // Draw game board
   CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
 
-  if (collision === false) {
-    if (keyBuffer.length > 0) {
-      moveSnake();
-      // see if snake is eating an apple
-      isSnakeOnApple();
+  if (keyBuffer.length > 0) {
+    moveSnake();
+    // see if snake is eating an apple
+    isSnakeOnApple();
 
-      // Check to see if snake hit the sides of the board
-      // or if snake hit itself
-      if (isSnakeCollidingWithWall() === true || isSnakeCollidingWithSelf() === true) {
-        gameOver();
-        return;
-      }
+    // Check to see if snake hit the sides of the board
+    // or if snake hit itself
+    if (isSnakeCollidingWithWall() === true || isSnakeCollidingWithSelf() === true) {
+      gameOver();
+      return;
     }
-
-    // Apple
-    CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
-
-    // Snake
-    CanvasRender.drawSnake(canvasContext, snake.body, GRID_SIZE);
   }
+
+  // Apple
+  CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
+
+  // Snake
+  CanvasRender.drawSnake(canvasContext, snake.body, GRID_SIZE);
 };
 
 const setDirection = (validDirection, key) => {
