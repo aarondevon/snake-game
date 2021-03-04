@@ -241,36 +241,7 @@ const isValidDirection = (key) => {
   return true;
 };
 
-const setDirection = (validDirection, key) => {
-  if (validDirection === true) {
-    keyBuffer.push(key);
-  }
-};
-
-document.addEventListener('keydown', (event) => {
-  if (collision === true && event.key === ' ') {
-    resetGame();
-  }
-
-  if (allowedKeys.includes(event.key)) {
-    const { key } = event;
-
-    if (collision === false) {
-      setDirection(isValidDirection(key), key);
-    }
-  }
-});
-
-if (localStorage.getItem('highScore') === null) {
-  localStorage.setItem('highScore', '0');
-} else {
-  highScoreCount.innerText = localStorage.getItem('highScore');
-}
-
-// Set apple location
-randomApplePosition();
-
-setInterval(() => {
+const gameLoop = () => {
   if (collision === true) {
     updateHighScore();
   }
@@ -314,4 +285,35 @@ setInterval(() => {
       CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
     }
   }
-}, 1000 / FRAMES_PER_SECOND);
+}
+
+const setDirection = (validDirection, key) => {
+  if (validDirection === true) {
+    keyBuffer.push(key);
+  }
+};
+
+document.addEventListener('keydown', (event) => {
+  if (collision === true && event.key === ' ') {
+    resetGame();
+  }
+
+  if (allowedKeys.includes(event.key)) {
+    const { key } = event;
+
+    if (collision === false) {
+      setDirection(isValidDirection(key), key);
+    }
+  }
+});
+
+if (localStorage.getItem('highScore') === null) {
+  localStorage.setItem('highScore', '0');
+} else {
+  highScoreCount.innerText = localStorage.getItem('highScore');
+}
+
+// Set apple location
+randomApplePosition();
+
+setInterval(gameLoop, 1000 / FRAMES_PER_SECOND);
