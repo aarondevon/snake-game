@@ -54,23 +54,6 @@ const randomApplePosition = () => {
   } while (isReady === false);
 };
 
-// Draw all elements
-const draw = () => {
-  // Draw game board
-  CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
-
-  // Apple
-  CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
-
-  // Snake
-  CanvasRender.drawSnake(canvasContext, snake, GRID_SIZE);
-
-  // Game Over screen
-  if (collision) {
-    CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
-  }
-};
-
 const getLastPosition = () => snake.map((position) => ({ x: position.x, y: position.y }));
 
 const setKeyBufferLength = () => {
@@ -324,6 +307,18 @@ setInterval(() => {
 
   if (collision === false) {
     executeMove();
-    draw();
+    // Draw game board
+    CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
+
+    // Apple
+    CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
+
+    // Snake
+    CanvasRender.drawSnake(canvasContext, snake, GRID_SIZE);
+
+    // Game Over screen
+    if (collision) {
+      CanvasRender.drawGameOverScreen(canvas, canvasContext, score);
+    }
   }
 }, 1000 / framesPerSecond);
