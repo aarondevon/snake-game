@@ -62,36 +62,35 @@ const updateDirection = () => {
   }
 };
 
-const snakeMoveLeft = () => {
-  snake.body[0].x -= MOVEMENT;
-};
-
-const snakeMoveRight = () => {
-  snake.body[0].x += MOVEMENT;
-};
-
-const snakeMoveUp = () => {
-  snake.body[0].y -= MOVEMENT;
-};
-
-const snakeMoveDown = () => {
-  snake.body[0].y += MOVEMENT;
+const snakeMovement = {
+  left() {
+    snake.body[0].x -= MOVEMENT;
+  },
+  right() {
+    snake.body[0].x += MOVEMENT;
+  },
+  up() {
+    snake.body[0].y -= MOVEMENT;
+  },
+  down() {
+    snake.body[0].y += MOVEMENT;
+  },
 };
 
 const getSnakeDirection = () => {
   // eslint-disable-next-line default-case
   switch (snake.snakeMovementBuffer[0]) {
     case 'ArrowLeft':
-      snakeMoveLeft();
+      snakeMovement.left();
       break;
     case 'ArrowRight':
-      snakeMoveRight();
+      snakeMovement.right();
       break;
     case 'ArrowUp':
-      snakeMoveUp();
+      snakeMovement.up();
       break;
     case 'ArrowDown':
-      snakeMoveDown();
+      snakeMovement.down();
       break;
   }
 };
