@@ -242,6 +242,9 @@ const isValidDirection = (key) => {
 };
 
 const gameLoop = () => {
+  // Draw game board
+  CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
+
   if (collision === true) {
     updateHighScore();
   }
@@ -271,8 +274,6 @@ const gameLoop = () => {
       // Check to see if snake hits itself
       snakeOnSnakeCollision();
     }
-    // Draw game board
-    CanvasRender.colorBoard(canvasContext, GRID_SIZE, ROWS, COLS);
 
     // Apple
     CanvasRender.drawApple(canvasContext, (appleLocation.x + 10), (appleLocation.y + 10), (GRID_SIZE / 2), '#9e170f');
