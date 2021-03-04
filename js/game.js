@@ -101,19 +101,15 @@ const getSnakeDirection = () => {
   switch (keyBuffer[0]) {
     case 'ArrowLeft':
       snakeMoveLeft();
-      // updateDirection();
       break;
     case 'ArrowRight':
       snakeMoveRight();
-      // updateDirection();
       break;
     case 'ArrowUp':
       snakeMoveUp();
-      // updateDirection();
       break;
     case 'ArrowDown':
       snakeMoveDown();
-      // updateDirection();
       break;
   }
 };
@@ -161,7 +157,6 @@ const moveSnake = () => {
   setKeyBufferLength();
   // Move snake within the grid
   if (snake.body[0].x % 20 === 0 && snake.body[0].y % 20 === 0) {
-    // moveSnake();
     updateDirection();
   }
 
