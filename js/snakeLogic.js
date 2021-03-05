@@ -1,70 +1,61 @@
-/* eslint-disable wrap-iife */
+/* eslint-disable wrap-iife,no-param-reassign */
 // eslint-disable-next-line no-unused-vars
-const Snake = (function () {
-  const movementBuffer = [];
-  // Initial starting snake
-  const body = [
-    { x: GRID_SIZE * 3, y: GRID_SIZE * 10 },
-    { x: GRID_SIZE * 2, y: GRID_SIZE * 10 },
-    { x: GRID_SIZE, y: GRID_SIZE * 10 },
-    { x: GRID_SIZE, y: GRID_SIZE * 10 },
-  ];
+const SnakeLogic = (function () {
+  const getLastPosition = (snake) => snake.body.map((position) => ({ x: position.x, y: position.y }));
 
-  const getLastPosition = () => snake.body.map((position) => ({ x: position.x, y: position.y }));
-
-  const setKeyBufferLength = () => {
-    if (snake.snakeMovementBuffer.length > 2) {
-      snake.snakeMovementBuffer.length = 2;
+  const setKeyBufferLength = (snake) => {
+    if (snake.movementBuffer.length > 2) {
+      snake.movementBuffer.length = 2;
     }
   };
 
-  const updateDirection = () => {
-    if (snake.snakeMovementBuffer.length > 1) {
-      snake.snakeMovementBuffer.shift();
+  const updateDirection = (snake) => {
+    if (snake.movementBuffer.length > 1) {
+      snake.movementBuffer.shift();
     }
   };
 
-  const moveLeft = () => {
-    snake.body[0].x -= MOVEMENT;
+  const moveLeft = (snake, movement) => {
+    snake.body[0].x -= movement;
   };
 
-  const moveRight = () => {
-    snake.body[0].x += MOVEMENT;
+  const moveRight = (snake, movement) => {
+    snake.body[0].x += movement;
   };
 
-  const moveUp = () => {
-    snake.body[0].y -= MOVEMENT;
+  const moveUp = (snake, movement) => {
+    snake.body[0].y -= movement;
   };
 
-  const moveDown = () => {
-    snake.body[0].y += MOVEMENT;
+  const moveDown = (snake, movement) => {
+    snake.body[0].y += movement;
   };
 
-  const getDirection = () => {
+  const getDirection = (snake, movement) => {
     // eslint-disable-next-line default-case
-    switch (snake.snakeMovementBuffer[0]) {
+    switch (snake.movementBuffer[0]) {
       case 'ArrowLeft':
-        snakeMovement.left();
+        moveLeft(snake, movement);
         break;
       case 'ArrowRight':
-        snakeMovement.right();
+        moveRight(snake, movement);
         break;
       case 'ArrowUp':
-        snakeMovement.up();
+        moveUp(snake, movement);
         break;
       case 'ArrowDown':
-        snakeMovement.down();
+        moveDown(snake, movement);
         break;
     }
   };
 
-  const updateSnakePosition = (lastPosition) => {
+  const updateSnakePosition = (snake, lastPosition) => {
     for (let i = snake.body.length - 1; i > 0; i--) {
       snake.body[i] = lastPosition[i - 1];
     }
   };
 
-  const getNewTailPosition = () => {
+  const getNewTailPosition = (snake) => {
     const snakeTail = snake.body[snake.body.length - 1];
     const snakeTailParent = snake.body[snake.body.length - 2];
     if (
@@ -84,19 +75,17 @@ const Snake = (function () {
     }
   };
 
-  const moveBody = (lastPosition) => {
+  const moveBody = (snake, lastPosition) => {
     const xPositionIsGridLengthApart =
       Math.abs(snake.body[1].x - snake.body[0].x) === GRID_SIZE;
     const yPositionIsGridLengthApart =
       Math.abs(snake.body[1].y - snake.body[0].y) === GRID_SIZE;
     if (xPositionIsGridLengthApart || yPositionIsGridLengthApart) {
-      updateSnakePosition(lastPosition);
+      updateSnakePosition(snake, lastPosition);
     }
   };
 
   return {
-    movementBuffer,
-    body,
     getLastPosition,
     setKeyBufferLength,
     updateDirection,
